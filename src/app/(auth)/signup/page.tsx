@@ -1,7 +1,7 @@
 'use client';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema, type LoginSchema } from '../schema';
+import { signupSchema, type SignupSchema } from '../schema';
 import { Form, Input, Button, Link } from '@heroui/react';
 import NextLink from 'next/link';
 import { LockKeyhole, LogIn, Mail, User } from 'lucide-react';
@@ -15,7 +15,7 @@ export default function SignUp() {
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+  const onSubmit: SubmitHandler<SignupSchema> = async (data) => {
     console.log('Form submitted:', data);
   };
 
