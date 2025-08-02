@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginSchema } from '../schema';
 import { Form, Input, Button, Link } from '@heroui/react';
 import NextLink from 'next/link';
+import { LockKeyhole, LogIn, User } from 'lucide-react';
 
 export default function Login() {
   const {
@@ -21,30 +22,36 @@ export default function Login() {
   return (
     <Form
       onSubmit={handleSubmit(onSubmit)}
-      className='bg-content1 text-content1-foreground flex w-90 flex-col items-center gap-5 rounded-2xl p-5'
+      className='bg-foreground text-background flex w-100 flex-col items-center gap-5 rounded-xl p-10'
     >
-      <h1 className='text-3xl'>Login</h1>
+      <h1 className='text-3xl font-semibold'>Login</h1>
       <Input
         {...register('username')}
+        placeholder='Email'
+        variant='bordered'
         color='primary'
-        label='Email'
-        labelPlacement='outside'
-        placeholder='Enter your username'
+        size='lg'
+        errorMessage={errors.username?.message || ''}
+        isInvalid={!!errors.username}
+        startContent={<User />}
       />
       <Input
         {...register('password')}
-        color='primary'
-        label='Password'
+        placeholder='Password'
         type='password'
-        labelPlacement='outside'
-        placeholder='Enter your password'
+        variant='bordered'
+        color='primary'
+        size='lg'
+        errorMessage={errors.password?.message || ''}
+        isInvalid={!!errors.password}
+        startContent={<LockKeyhole />}
       />
-      <Button className='w-full py-5' color='primary' type='submit'>
-        Log in
+      <Button className='w-full' color='primary' type='submit' size='lg'>
+        <LogIn /> Log in
       </Button>
       <p>
         Or you don&apos;t have account yet?{' '}
-        <Link href='/signup' as={NextLink} underline='hover' className='text-blue-500'>
+        <Link href='/signup' as={NextLink} underline='hover' className='text-primary'>
           Sign up
         </Link>
       </p>
