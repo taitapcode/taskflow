@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <div className='flex h-screen items-center justify-center'>
       <StarsBackground />
-      <ShootingStars />
+      <ShootingStars starHeight={3} starColor='#fff' />
       <main className='z-10'>{children}</main>
     </div>
   );
