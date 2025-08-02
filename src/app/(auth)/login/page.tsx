@@ -27,7 +27,7 @@ export default function Login() {
       <h1 className='text-3xl font-semibold'>Login</h1>
       <Input
         {...register('username')}
-        placeholder='Email'
+        placeholder='Username or Email'
         variant='bordered'
         color='primary'
         size='lg'
