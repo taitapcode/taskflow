@@ -8,7 +8,7 @@ export default function Home() {
     <div className='flex h-screen items-center justify-center'>
       <StarsBackground />
       <ShootingStars />
-      <main className='flex flex-col items-center justify-center gap-4'>
+      <main className='z-10 flex flex-col items-center justify-center gap-4'>
         <h1 className='font-fascinate text-primary text-9xl font-bold'>TaskFlow</h1>
         <h3 className='text-lg'>
           A task management app that helps you organize your tasks efficiently.
