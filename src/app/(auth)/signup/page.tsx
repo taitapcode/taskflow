@@ -33,7 +33,6 @@ export default function SignUp() {
         },
       },
     });
-    console.log(error);
     if (error) setError('email', { type: 'manual', message: error.message });
     else if (user) router.push('/app');
   };

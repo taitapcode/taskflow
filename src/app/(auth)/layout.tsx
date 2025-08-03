@@ -1,11 +1,20 @@
+import createClient from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { ShootingStars } from '@/components/ShootingStars';
 import { StarsBackground } from '@/components/StarBackground';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) redirect('/app');
+
   return (
     <div className='flex h-screen items-center justify-center'>
       <StarsBackground />
