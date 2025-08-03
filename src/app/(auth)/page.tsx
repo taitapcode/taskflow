@@ -1,7 +1,16 @@
+import { redirect } from 'next/navigation';
+import createClient from '@/utils/supabase/server';
 import { Button } from '@heroui/button';
 import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) redirect('/app');
+
   return (
     <div className='z-10 flex flex-col items-center justify-center gap-4'>
       <h1 className='font-fascinate text-foreground text-9xl font-bold'>TaskFlow</h1>

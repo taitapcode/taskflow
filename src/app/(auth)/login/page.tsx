@@ -1,22 +1,32 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, type LoginSchema } from '../schema';
+import { loginSchema, type LoginSchema } from './schema';
+import createClient from '@/utils/supabase/browser';
 import { Form, Input, Button, Link } from '@heroui/react';
 import NextLink from 'next/link';
 import { LockKeyhole, LogIn, User } from 'lucide-react';
 
 export default function Login() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
-    console.log('Form submitted:', data);
+    const supabase = createClient();
+    const { error, data: userData } = await supabase.auth.signInWithPassword(data);
+    if (userData) {
+      console.log('User logged in:', userData);
+      router.push('/app');
+    }
+    if (error) setError('email', { type: 'manual', message: error.message });
   };
 
   return (
@@ -26,13 +36,13 @@ export default function Login() {
     >
       <h1 className='text-3xl font-semibold'>Login</h1>
       <Input
-        {...register('username')}
-        placeholder='Username or Email'
+        {...register('email')}
+        placeholder='Email'
         variant='bordered'
         color='primary'
         size='lg'
-        errorMessage={errors.username?.message || ''}
-        isInvalid={!!errors.username}
+        errorMessage={errors.email?.message || ''}
+        isInvalid={!!errors.email}
         startContent={<User />}
       />
       <Input
