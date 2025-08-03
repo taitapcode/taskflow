@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, RefObject, useCallback } from 'react';
-import cn from '@/utils/cn';
+import cn from '@/lib/cn';
 
 interface StarProps {
   x: number;
