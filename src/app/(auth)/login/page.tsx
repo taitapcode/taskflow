@@ -25,7 +25,7 @@ export default function Login() {
       error,
       data: { user },
     } = await supabase.auth.signInWithPassword(data);
-    if (error) setError('email', { type: 'manual', message: error.message });
+    if (error) setError('root', { type: 'manual', message: error.message });
     else if (user) router.push('/app');
   };
 
@@ -35,6 +35,7 @@ export default function Login() {
       className='bg-foreground text-background flex w-100 flex-col items-center gap-5 rounded-xl p-10'
     >
       <h1 className='text-3xl font-semibold'>Login</h1>
+      {errors.root && <p className='text-danger'>{errors.root.message}</p>}
       <Input
         {...register('email')}
         placeholder='Email'
