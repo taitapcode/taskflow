@@ -21,8 +21,8 @@ export type Database = {
           description: string | null
           id: number
           Name: string
+          priority: Database["public"]["Enums"]["priority"] | null
           space_id: number
-          user_id: string
         }
         Insert: {
           created_at?: string
@@ -30,8 +30,8 @@ export type Database = {
           description?: string | null
           id?: number
           Name: string
+          priority?: Database["public"]["Enums"]["priority"] | null
           space_id: number
-          user_id: string
         }
         Update: {
           created_at?: string
@@ -39,8 +39,8 @@ export type Database = {
           description?: string | null
           id?: number
           Name?: string
+          priority?: Database["public"]["Enums"]["priority"] | null
           space_id?: number
-          user_id?: string
         }
         Relationships: [
           {
@@ -57,56 +57,56 @@ export type Database = {
           created_at: string
           id: number
           name: string
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: number
           name: string
+          user_id: string
         }
         Update: {
           created_at?: string
           id?: number
           name?: string
+          user_id?: string
         }
         Relationships: []
       }
       Task: {
         Row: {
           created_at: string
-          deadline: string
+          deadline: string | null
           description: string | null
           id: number
           name: string
-          priority: Database["public"]["Enums"]["priority"]
+          priority: Database["public"]["Enums"]["priority"] | null
           space_id: number
           status: Database["public"]["Enums"]["status"]
-          user_id: string
         }
         Insert: {
           created_at?: string
-          deadline: string
+          deadline?: string | null
           description?: string | null
           id?: number
           name: string
-          priority: Database["public"]["Enums"]["priority"]
+          priority?: Database["public"]["Enums"]["priority"] | null
           space_id: number
-          status: Database["public"]["Enums"]["status"]
-          user_id: string
+          status?: Database["public"]["Enums"]["status"]
         }
         Update: {
           created_at?: string
-          deadline?: string
+          deadline?: string | null
           description?: string | null
           id?: number
           name?: string
-          priority?: Database["public"]["Enums"]["priority"]
+          priority?: Database["public"]["Enums"]["priority"] | null
           space_id?: number
           status?: Database["public"]["Enums"]["status"]
-          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Task_task_space_id_fkey"
+            foreignKeyName: "Task_space_id_fkey"
             columns: ["space_id"]
             isOneToOne: false
             referencedRelation: "Space"
