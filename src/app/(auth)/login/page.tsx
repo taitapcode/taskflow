@@ -13,7 +13,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -21,12 +21,12 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     const supabase = createClient();
-    const { error, data: userData } = await supabase.auth.signInWithPassword(data);
-    if (userData) {
-      console.log('User logged in:', userData);
-      router.push('/app');
-    }
+    const {
+      error,
+      data: { user },
+    } = await supabase.auth.signInWithPassword(data);
     if (error) setError('email', { type: 'manual', message: error.message });
+    else if (user) router.push('/app');
   };
 
   return (
@@ -56,7 +56,7 @@ export default function Login() {
         isInvalid={!!errors.password}
         startContent={<LockKeyhole />}
       />
-      <Button className='w-full' color='primary' type='submit' size='lg'>
+      <Button className='w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
         <LogIn /> Log in
       </Button>
       <p>

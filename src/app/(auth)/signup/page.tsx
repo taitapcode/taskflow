@@ -1,22 +1,36 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupSchema } from './schema';
+import createClient from '@/utils/supabase/browser';
 import { Form, Input, Button, Link } from '@heroui/react';
 import NextLink from 'next/link';
 import { LockKeyhole, LogIn, Mail, User } from 'lucide-react';
 
 export default function SignUp() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setError,
   } = useForm({
     resolver: zodResolver(signupSchema),
   });
 
   const onSubmit: SubmitHandler<SignupSchema> = async (data) => {
-    console.log('Form submitted:', data);
+    const supabase = createClient();
+    const {
+      error,
+      data: { user },
+    } = await supabase.auth.signUp(data);
+    console.log(error);
+    if (error) setError('email', { type: 'manual', message: error.message });
+    else if (user) {
+      console.log('User signed up:', user);
+      router.push('/app');
+    }
   };
 
   return (
@@ -69,7 +83,7 @@ export default function SignUp() {
         startContent={<LockKeyhole />}
       />
 
-      <Button className='w-full' color='primary' type='submit' size='lg'>
+      <Button className='w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
         <LogIn /> Sign Up
       </Button>
       <p>
