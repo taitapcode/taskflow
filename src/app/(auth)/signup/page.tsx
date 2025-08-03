@@ -24,7 +24,15 @@ export default function SignUp() {
     const {
       error,
       data: { user },
-    } = await supabase.auth.signUp(data);
+    } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          display_name: data.displayName,
+        },
+      },
+    });
     console.log(error);
     if (error) setError('email', { type: 'manual', message: error.message });
     else if (user) {
@@ -40,13 +48,13 @@ export default function SignUp() {
     >
       <h1 className='text-3xl font-semibold'>Sign Up</h1>
       <Input
-        {...register('username')}
-        placeholder='Username'
+        {...register('displayName')}
+        placeholder='Display Name'
         variant='bordered'
         color='primary'
         size='lg'
-        errorMessage={errors.username?.message || ''}
-        isInvalid={!!errors.username}
+        errorMessage={errors.displayName?.message || ''}
+        isInvalid={!!errors.displayName}
         startContent={<User />}
       />
       <Input
