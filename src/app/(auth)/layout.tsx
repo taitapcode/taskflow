@@ -1,7 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { ShootingStars } from '@/components/ShootingStars';
-import { StarsBackground } from '@/components/StarBackground';
+import { ShootingStars } from './_components/ShootingStars';
+import { StarsBackground } from './_components/StarBackground';
 
 export default async function RootLayout({
   children,
