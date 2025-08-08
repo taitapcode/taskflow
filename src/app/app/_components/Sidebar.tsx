@@ -15,17 +15,20 @@ function SidebarLink({ href, label, icon: Icon }: SidebarLinkProps) {
   const { open } = useSidebarStore();
 
   return (
-    <Link href={href} className='flex gap-2'>
-      <div className='w-8'>
-        <Icon size={30} />
+    <Link
+      href={href}
+      className='hover:bg-content3 flex items-center gap-4 rounded-md p-2 hover:[&>span]:translate-x-2.5'
+    >
+      <div className='w-9'>
+        <Icon size={40} />
       </div>
       <motion.span
         animate={{
-          x: open ? '0' : '-20px',
+          x: open ? 0 : 20,
           opacity: open ? 1 : 0,
         }}
         transition={{ duration: 0.1 }}
-        className='text-lg font-medium whitespace-nowrap'
+        className='overflow-hidden text-xl font-semibold whitespace-nowrap transition-transform'
       >
         {label}
       </motion.span>
@@ -51,8 +54,8 @@ function DesktopSidebar() {
 
   return (
     <motion.nav
-      className='bg-content1 flex h-full w-[75px] flex-col justify-between p-5'
-      animate={{ width: open ? '280px' : '75px' }}
+      className='bg-content2 hidden h-full w-[80px] flex-col justify-between p-3 md:flex'
+      animate={{ width: open ? '280px' : '80px' }}
       onMouseEnter={setOpen}
       onMouseLeave={setClose}
     >
