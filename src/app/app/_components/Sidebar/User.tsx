@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useUserStore } from '../../_store/user';
 import { useSidebarStore } from '../../_store/sidebar';
 import { motion } from 'motion/react';
+import Link from 'next/link';
 import { Avatar } from '@heroui/react';
 
 export default function User() {
@@ -10,10 +11,11 @@ export default function User() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div
+    <Link
       className='hover:bg-content3 relative flex cursor-pointer items-center gap-3 overflow-x-hidden rounded-md p-1'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      href='/app/account'
     >
       <div className='w-9'>
         <Avatar showFallback={!!user?.avatarUrl} src={user?.avatarUrl} />
@@ -27,6 +29,6 @@ export default function User() {
       >
         {user?.displayName}
       </motion.span>
-    </div>
+    </Link>
   );
 }
