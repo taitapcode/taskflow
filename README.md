@@ -1,4 +1,4 @@
-# <img src='./src/public/logo.png' /> TaskFlow
+# <img src='./src/public/logo.png' width='40' /> TaskFlow
 
 **Organize. Automate. Accomplish.**
 
