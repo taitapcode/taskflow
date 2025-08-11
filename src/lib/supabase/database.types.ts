@@ -73,6 +73,38 @@ export type Database = {
         }
         Relationships: []
       }
+      Tag: {
+        Row: {
+          color: Database["public"]["Enums"]["tags color"]
+          created_at: string
+          id: number
+          name: string
+          task_id: number
+        }
+        Insert: {
+          color: Database["public"]["Enums"]["tags color"]
+          created_at?: string
+          id?: number
+          name: string
+          task_id: number
+        }
+        Update: {
+          color?: Database["public"]["Enums"]["tags color"]
+          created_at?: string
+          id?: number
+          name?: string
+          task_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Tag_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "Task"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Task: {
         Row: {
           created_at: string
@@ -83,6 +115,7 @@ export type Database = {
           priority: Database["public"]["Enums"]["priority"] | null
           space_id: number
           status: Database["public"]["Enums"]["status"]
+          tags: number[] | null
         }
         Insert: {
           created_at?: string
@@ -93,6 +126,7 @@ export type Database = {
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id: number
           status?: Database["public"]["Enums"]["status"]
+          tags?: number[] | null
         }
         Update: {
           created_at?: string
@@ -103,6 +137,7 @@ export type Database = {
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id?: number
           status?: Database["public"]["Enums"]["status"]
+          tags?: number[] | null
         }
         Relationships: [
           {
@@ -124,6 +159,17 @@ export type Database = {
     Enums: {
       priority: "low" | "medium" | "high" | "imidiate"
       status: "done" | "in-progress" | "to-do" | "overdue"
+      "tags color":
+        | "#FF6B6B"
+        | "#FFD93D"
+        | "#6BCB77"
+        | "#4D96FF"
+        | "#FF9F1C"
+        | "#9D4EDD"
+        | "#00B4D8"
+        | "#F72585"
+        | "#06D6A0"
+        | "#8D99AE"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -253,6 +299,18 @@ export const Constants = {
     Enums: {
       priority: ["low", "medium", "high", "imidiate"],
       status: ["done", "in-progress", "to-do", "overdue"],
+      "tags color": [
+        "#FF6B6B",
+        "#FFD93D",
+        "#6BCB77",
+        "#4D96FF",
+        "#FF9F1C",
+        "#9D4EDD",
+        "#00B4D8",
+        "#F72585",
+        "#06D6A0",
+        "#8D99AE",
+      ],
     },
   },
 } as const
