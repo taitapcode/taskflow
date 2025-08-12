@@ -1,7 +1,7 @@
 import { useSidebarStore } from '../../_store/sidebar';
 import { motion } from 'motion/react';
 import logoImage from '@/public/logo.png';
-import { CalendarDays, LayoutDashboard, ListTodo } from 'lucide-react';
+import { CalendarDays, Folder, LayoutDashboard, ListTodo } from 'lucide-react';
 import Link, { type SidebarLinkProps } from './Link';
 import Image from 'next/image';
 import User from './User';
@@ -11,6 +11,11 @@ const links: SidebarLinkProps[] = [
     href: '/app',
     label: 'Daskboard',
     icon: LayoutDashboard,
+  },
+  {
+    href: '/app/spaces',
+    label: 'Spaces',
+    icon: Folder,
   },
   {
     href: '/app/tasks',
