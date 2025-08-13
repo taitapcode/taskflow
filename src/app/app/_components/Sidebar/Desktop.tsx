@@ -2,7 +2,7 @@ import { useSidebarStore } from '../../_store/sidebar';
 import { motion } from 'motion/react';
 import logoImage from '@/public/logo.png';
 import { CalendarDays, Folder, LayoutDashboard, ListTodo } from 'lucide-react';
-import Link, { type SidebarLinkProps } from './Link';
+import Link, { type SidebarLinkProps } from './DesktopLink';
 import Image from 'next/image';
 import User from './User';
 
