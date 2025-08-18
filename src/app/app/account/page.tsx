@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '../_store/user';
 import { useEffect, useState } from 'react';
 import AvatarUploader from '../_components/AvatarUploader';
+import { Card, CardBody, Input, Button } from '@heroui/react';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -70,8 +71,9 @@ export default function AccountPage() {
           <p className='text-foreground-500 mt-1 text-sm'>Manage your profile and session</p>
         </header>
 
-        <section className='bg-content2 container rounded-lg border border-neutral-700 p-4'>
-          <div className='grid gap-4 sm:grid-cols-2'>
+        <Card shadow='sm' className='bg-content2 border border-neutral-700'>
+          <CardBody className='p-4'>
+            <div className='grid gap-4 sm:grid-cols-2'>
             <div className='sm:col-span-2'>
               <AvatarUploader
                 onUploaded={(url) => {
@@ -81,49 +83,38 @@ export default function AccountPage() {
               />
             </div>
             <div>
-              <label className='mb-1 block text-sm'>Email</label>
-              <input
-                value={user?.email ?? ''}
-                disabled
-                className='bg-content1 w-full rounded-md border border-neutral-700 px-3 py-2 text-sm opacity-70'
-              />
+              <Input label='Email' value={user?.email ?? ''} isDisabled variant='bordered' />
             </div>
             <div>
-              <label className='mb-1 block text-sm'>Display Name</label>
-              <input
+              <Input
+                label='Display Name'
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className='bg-content1 w-full rounded-md border border-neutral-700 px-3 py-2 text-sm'
                 placeholder='Your name'
+                variant='bordered'
               />
             </div>
             <div className='sm:col-span-2'>
-              <label className='mb-1 block text-sm'>Avatar URL</label>
-              <input
+              <Input
+                label='Avatar URL'
                 value={avatarUrl}
                 onChange={(e) => setAvatarUrl(e.target.value)}
-                className='bg-content1 w-full rounded-md border border-neutral-700 px-3 py-2 text-sm'
                 placeholder='https://…'
+                variant='bordered'
               />
             </div>
-          </div>
-          {message && <p className='text-foreground-500 mt-3 text-xs'>{message}</p>}
-          <div className='mt-4 flex gap-2'>
-            <button
-              onClick={saveProfile}
-              disabled={saving}
-              className='bg-foreground text-background rounded-md px-3 py-2 text-sm hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60'
-            >
-              {saving ? 'Saving…' : 'Save Profile'}
-            </button>
-            <button
-              onClick={handleLogOut}
-              className='hover:bg-content3 rounded-md border border-neutral-700 px-3 py-2 text-sm'
-            >
-              Logout
-            </button>
-          </div>
-        </section>
+            </div>
+            {message && <p className='text-foreground-500 mt-3 text-xs'>{message}</p>}
+            <div className='mt-4 flex gap-2'>
+              <Button onPress={saveProfile} isDisabled={saving} color='primary' className='text-background'>
+                {saving ? 'Saving…' : 'Save Profile'}
+              </Button>
+              <Button variant='bordered' onPress={handleLogOut}>
+                Logout
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     </div>
   );

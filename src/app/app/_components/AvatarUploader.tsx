@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/browser';
 import { useUserStore } from '../_store/user';
 import { useState } from 'react';
+import { Button } from '@heroui/react';
 
 type Props = {
   onUploaded?: (publicUrl: string) => void;
@@ -89,7 +90,7 @@ export default function AvatarUploader({ onUploaded }: Props) {
         ) : (
           <div className='h-12 w-12 rounded-full border border-dashed border-neutral-700' />
         )}
-        <label className='hover:bg-content3 relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md border border-neutral-700 px-3 py-2 text-sm'>
+        <Button as='label' variant='bordered' className='cursor-pointer'>
           <input
             type='file'
             accept='image/*'
@@ -98,7 +99,7 @@ export default function AvatarUploader({ onUploaded }: Props) {
             className='sr-only'
           />
           {uploading ? 'Uploading…' : 'Upload new'}
-        </label>
+        </Button>
       </div>
       {error && <p className='mt-2 text-xs text-red-500'>{error}</p>}
     </div>
