@@ -10,7 +10,7 @@ export default async function AppPage() {
   console.log('Current user:', user);
 
   // Note: Make sure 'Space' is the correct table name (case sensitive)
-  const { data, error } = await supabase.from('Space').select('*');
+  const { data, error } = await supabase.from('Task').select('*');
 
   if (error) {
     console.error('Supabase error:', error);

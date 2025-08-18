@@ -115,7 +115,6 @@ export type Database = {
           priority: Database["public"]["Enums"]["priority"] | null
           space_id: number
           status: Database["public"]["Enums"]["status"]
-          tags: number[] | null
         }
         Insert: {
           created_at?: string
@@ -126,7 +125,6 @@ export type Database = {
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id: number
           status?: Database["public"]["Enums"]["status"]
-          tags?: number[] | null
         }
         Update: {
           created_at?: string
@@ -137,7 +135,6 @@ export type Database = {
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id?: number
           status?: Database["public"]["Enums"]["status"]
-          tags?: number[] | null
         }
         Relationships: [
           {
