@@ -9,7 +9,7 @@ import User from './User';
 const links: SidebarLinkProps[] = [
   {
     href: '/app',
-    label: 'Daskboard',
+    label: 'Dashboard',
     icon: LayoutDashboard,
   },
   {
