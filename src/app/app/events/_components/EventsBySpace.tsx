@@ -35,7 +35,9 @@ export default function EventsBySpace({ spaces, events }: Props) {
   // Local filters (no URL sync)
   const [query, setQuery] = useState('');
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<Tables<'Event'>['priority'] | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<
+    NonNullable<Tables<'Event'>['priority']> | 'all'
+  >('all');
   const [hidePast, setHidePast] = useState(true);
   const [sortBy, setSortBy] = useState<'date_asc' | 'date_desc' | 'created_desc' | 'created_asc'>('date_asc');
 

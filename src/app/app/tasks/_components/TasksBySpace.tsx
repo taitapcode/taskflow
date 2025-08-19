@@ -50,7 +50,9 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   const [query, setQuery] = useState('');
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<Tables<'Task'>['status'] | 'all'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<Tables<'Task'>['priority'] | 'all'>('all');
+  const [priorityFilter, setPriorityFilter] = useState<
+    NonNullable<Tables<'Task'>['priority']> | 'all'
+  >('all');
   const [sortBy, setSortBy] = useState<
     'created_desc' | 'created_asc' | 'deadline_asc' | 'deadline_desc' | 'priority_desc' | 'priority_asc'
   >('created_desc');
