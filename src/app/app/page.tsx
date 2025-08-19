@@ -3,6 +3,8 @@ import type { Tables } from '@/lib/supabase/database.types';
 import SummaryCards from './_components/Dashboard/SummaryCards';
 import RecentTasks from './_components/Dashboard/RecentTasks';
 import UpcomingEvents from './_components/Dashboard/UpcomingEvents';
+import { Card, CardBody, Button, Chip } from '@/app/_components/UI';
+import { CalendarDays, ListTodo, User as UserIcon } from 'lucide-react';
 
 export default async function AppPage() {
   const supabase = await createClient();
@@ -54,23 +56,71 @@ export default async function AppPage() {
     events = (eventsData as any) ?? [];
   }
 
+  const displayName =
+    // @ts-expect-error user_metadata may exist on Supabase user
+    (user?.user_metadata?.display_name as string | undefined) ||
+    (user?.email ? (user.email as string).split('@')[0] : undefined) ||
+    'there';
+
   return (
     <main className='flex min-h-full flex-col gap-6'>
-      <header className='flex items-end justify-between'>
+      <header className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
         <div>
-          <h1 className='text-2xl font-semibold'>Dashboard</h1>
-          <p className='text-foreground-500 mt-1 text-sm'>Overview of your tasks and events</p>
+          <h1 className='text-2xl font-semibold'>Welcome back, {displayName}</h1>
+          <p className='text-foreground-500 mt-1 text-sm'>Here’s a quick snapshot of your work.</p>
+        </div>
+        <div className='flex items-center gap-2'>
+          <Chip size='sm' variant='flat' color='primary'>
+            {new Date().toLocaleDateString()}
+          </Chip>
         </div>
       </header>
 
       <SummaryCards tasks={tasks} events={events} />
 
+      {/* Quick actions */}
+      <section className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
+        <Card shadow='sm' className='bg-content2'>
+          <CardBody className='flex items-center justify-between gap-3'>
+            <div>
+              <p className='font-medium'>Tasks</p>
+              <p className='text-foreground-600 text-sm'>Review and update your tasks</p>
+            </div>
+            <Button href='/app/tasks' variant='bordered' size='sm' radius='full'>
+              <ListTodo size={18} /> Open
+            </Button>
+          </CardBody>
+        </Card>
+        <Card shadow='sm' className='bg-content2'>
+          <CardBody className='flex items-center justify-between gap-3'>
+            <div>
+              <p className='font-medium'>Events</p>
+              <p className='text-foreground-600 text-sm'>See what’s coming up</p>
+            </div>
+            <Button href='/app/events' variant='bordered' size='sm' radius='full'>
+              <CalendarDays size={18} /> Open
+            </Button>
+          </CardBody>
+        </Card>
+        <Card shadow='sm' className='bg-content2'>
+          <CardBody className='flex items-center justify-between gap-3'>
+            <div>
+              <p className='font-medium'>Account</p>
+              <p className='text-foreground-600 text-sm'>Profile and preferences</p>
+            </div>
+            <Button href='/app/account' variant='bordered' size='sm' radius='full'>
+              <UserIcon size={18} /> Open
+            </Button>
+          </CardBody>
+        </Card>
+      </section>
+
       <div className='grid gap-6 lg:grid-cols-3'>
         <div className='lg:col-span-2'>
-          <RecentTasks tasks={tasks} />
+          <RecentTasks tasks={tasks} viewAllHref='/app/tasks' />
         </div>
         <div className='lg:col-span-1'>
-          <UpcomingEvents events={events} />
+          <UpcomingEvents events={events} viewAllHref='/app/events' />
         </div>
       </div>
     </main>

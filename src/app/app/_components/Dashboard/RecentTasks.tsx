@@ -38,7 +38,7 @@ function priorityColor(priority: Tables<'Task'>['priority'] | null | undefined) 
   }
 }
 
-export default function RecentTasks({ tasks }: Props) {
+export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHref?: string }) {
   const router = useRouter();
   const columns: Column<TaskWithSpace>[] = [
     {
@@ -97,6 +97,9 @@ export default function RecentTasks({ tasks }: Props) {
       <CardBody className='p-4'>
         <div className='mb-3 flex items-center justify-between'>
           <h2 className='text-lg font-medium'>Recent Tasks</h2>
+          {viewAllHref && (
+            <a href={viewAllHref} className='text-sm text-primary hover:underline'>View all</a>
+          )}
         </div>
         {/* Mobile – stacked list */}
         <ul className='md:hidden flex flex-col gap-2'>

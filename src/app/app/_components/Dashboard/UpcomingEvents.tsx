@@ -9,7 +9,7 @@ type Props = {
   events: EventWithSpace[];
 };
 
-export default function UpcomingEvents({ events }: Props) {
+export default function UpcomingEvents({ events, viewAllHref }: Props & { viewAllHref?: string }) {
   const router = useRouter();
   const upcoming = events
     .filter((e) => new Date(e.date) >= new Date())
@@ -18,7 +18,12 @@ export default function UpcomingEvents({ events }: Props) {
   return (
     <Card shadow='sm' className='bg-content2 border border-neutral-700'>
       <CardBody className='p-4'>
-        <h2 className='mb-3 text-lg font-medium'>Upcoming Events</h2>
+        <div className='mb-3 flex items-center justify-between'>
+          <h2 className='text-lg font-medium'>Upcoming Events</h2>
+          {viewAllHref && (
+            <a href={viewAllHref} className='text-sm text-primary hover:underline'>View all</a>
+          )}
+        </div>
         <ul className='flex flex-col gap-3'>
           {upcoming.length === 0 && (
             <li className='text-foreground-500 text-sm'>No upcoming events</li>
