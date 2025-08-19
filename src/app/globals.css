@@ -41,3 +41,36 @@ body {
   color: var(--color-foreground);
   min-height: 100%;
 }
+
+/* Empty state animated backdrop */
+.empty-orb {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.28;
+}
+.orb--primary {
+  background: radial-gradient(ellipse at center, var(--color-primary) 0%, transparent 60%);
+  top: 15%;
+  left: 20%;
+}
+.orb--accent {
+  background: radial-gradient(ellipse at center, #a855f7 0%, transparent 60%);
+  bottom: 10%;
+  right: 15%;
+}
+
+@keyframes float-a {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(12px, -8px, 0) scale(1.05); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes float-b {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-10px, 10px, 0) scale(1.04); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+.animate-float-a { animation: float-a 8s ease-in-out infinite; }
+.animate-float-b { animation: float-b 10s ease-in-out infinite; }

@@ -17,6 +17,7 @@ export type ButtonProps = {
   size?: ButtonSize;
   radius?: ButtonRadius;
   isDisabled?: boolean;
+  isLoading?: boolean;
   disabled?: boolean;
   onPress?: React.MouseEventHandler<HTMLElement>;
   onClick?: React.MouseEventHandler<HTMLElement>;
@@ -93,13 +94,14 @@ export default function Button({
   size = 'md',
   radius = 'md',
   isDisabled,
+  isLoading,
   disabled,
   onPress,
   onClick,
   href,
   type = 'button',
 }: ButtonProps) {
-  const isDisabledFinal = isDisabled ?? disabled ?? false;
+  const isDisabledFinal = (isDisabled ?? disabled ?? false) || Boolean(isLoading);
   const base = cn(
     'inline-flex select-none items-center justify-center gap-2 font-medium transition-all cursor-pointer',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
@@ -121,6 +123,12 @@ export default function Button({
     return (
       <motion.div {...motionProps} className='inline-flex'>
         <Link href={href} className={base} aria-disabled={isDisabledFinal} onClick={onPress ?? onClick}>
+          {isLoading && (
+            <svg className='h-4 w-4 animate-spin' viewBox='0 0 24 24' fill='none'>
+              <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+              <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z' />
+            </svg>
+          )}
           {children}
         </Link>
       </motion.div>
@@ -135,6 +143,12 @@ export default function Button({
       onClick={onPress ?? onClick}
       type={type}
     >
+      {isLoading && (
+        <svg className='h-4 w-4 animate-spin' viewBox='0 0 24 24' fill='none'>
+          <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+          <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z' />
+        </svg>
+      )}
       {children}
     </motion.button>
   );
