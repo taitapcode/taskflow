@@ -1,6 +1,6 @@
 "use client";
 import type { Tables } from '@/lib/supabase/database.types';
-import { Card, CardBody, Chip } from '@heroui/react';
+import { Card, CardBody, Chip } from '@/app/_components/UI';
 import { colorForLabel } from '@/lib/color';
 import { useRouter } from 'next/navigation';
 

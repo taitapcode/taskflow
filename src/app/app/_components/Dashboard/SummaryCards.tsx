@@ -1,6 +1,6 @@
 "use client";
 import type { Tables } from '@/lib/supabase/database.types';
-import { Card, CardBody } from '@heroui/react';
+import { Card, CardBody } from '@/app/_components/UI';
 import {
   ListTodo,
   Circle,

@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^2.8.2",
     "@hookform/resolvers": "^5.2.1",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",

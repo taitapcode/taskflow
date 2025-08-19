@@ -27,14 +27,14 @@ export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProp
     <Link
       href={href}
       className={cn(
-        'hover:bg-content3 flex items-center gap-3 rounded-md px-[11px] py-2',
+        'hover:bg-content3 flex items-center gap-3 rounded-md px-2 py-1.5',
         isActive && '!bg-content4',
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className='w-9'>
-        <Icon size={24} />
+      <div className='grid h-9 w-9 flex-none place-items-center'>
+        <Icon size={24} className='leading-none' />
       </div>
       <motion.span
         animate={{

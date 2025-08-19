@@ -1,6 +1,6 @@
 "use client";
 import type { Tables } from '@/lib/supabase/database.types';
-import { Card, CardBody, Chip } from '@heroui/react';
+import { Card, CardBody, Chip } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
 import { useRouter } from 'next/navigation';
 

@@ -4,7 +4,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginSchema } from './schema';
 import createClient from '@/lib/supabase/browser';
-import { Form, Input, Button, Link } from '@heroui/react';
+import { Form, Input, Button } from '@/app/_components/UI';
 import NextLink from 'next/link';
 import { LockKeyhole, LogIn, User } from 'lucide-react';
 
@@ -44,7 +44,7 @@ export default function Login() {
         size='lg'
         errorMessage={errors.email?.message || ''}
         isInvalid={!!errors.email}
-        startContent={<User className={errors.email ? 'text-danger' : 'text-content2'} />}
+        startContent={<User />}
       />
       <Input
         {...register('password')}
@@ -55,16 +55,14 @@ export default function Login() {
         size='lg'
         errorMessage={errors.password?.message || ''}
         isInvalid={!!errors.password}
-        startContent={<LockKeyhole className={errors.password ? 'text-danger' : 'text-content2'} />}
+        startContent={<LockKeyhole />}
       />
       <Button className='w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
         <LogIn /> Log in
       </Button>
       <p>
         Or you don&apos;t have account yet?{' '}
-        <Link href='/signup' as={NextLink} underline='hover' className='text-primary'>
-          Sign up
-        </Link>
+        <NextLink href='/signup' className='text-primary hover:underline'>Sign up</NextLink>
       </p>
     </Form>
   );

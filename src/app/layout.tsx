@@ -1,6 +1,5 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import Provider from './provider';
 
 export const metadata: Metadata = {
   title: 'TaskFlow',
@@ -14,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' className='dark'>
-      <body>
-        <Provider>{children}</Provider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

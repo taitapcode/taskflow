@@ -4,7 +4,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupSchema } from './schema';
 import createClient from '@/lib/supabase/browser';
-import { Form, Input, Button, Link } from '@heroui/react';
+import { Form, Input, Button } from '@/app/_components/UI';
 import NextLink from 'next/link';
 import { LockKeyhole, LogIn, Mail, User } from 'lucide-react';
 
@@ -52,7 +52,7 @@ export default function SignUp() {
         size='lg'
         errorMessage={errors.displayName?.message || ''}
         isInvalid={!!errors.displayName}
-        startContent={<User className={errors.displayName ? 'text-danger' : 'text-content2'} />}
+        startContent={<User />}
       />
       <Input
         {...register('email')}
@@ -62,7 +62,7 @@ export default function SignUp() {
         size='lg'
         errorMessage={errors.email?.message || ''}
         isInvalid={!!errors.email}
-        startContent={<Mail className={errors.email ? 'text-danger' : 'text-content2'} />}
+        startContent={<Mail />}
       />
 
       <Input
@@ -74,7 +74,7 @@ export default function SignUp() {
         size='lg'
         errorMessage={errors.password?.message || ''}
         isInvalid={!!errors.password}
-        startContent={<LockKeyhole className={errors.password ? 'text-danger' : 'text-content2'} />}
+        startContent={<LockKeyhole />}
       />
       <Input
         {...register('confirmPassword')}
@@ -85,9 +85,7 @@ export default function SignUp() {
         size='lg'
         errorMessage={errors.confirmPassword?.message || ''}
         isInvalid={!!errors.confirmPassword}
-        startContent={
-          <LockKeyhole className={errors.confirmPassword ? 'text-danger' : 'text-content2'} />
-        }
+        startContent={<LockKeyhole />}
       />
 
       <Button className='w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
@@ -95,9 +93,7 @@ export default function SignUp() {
       </Button>
       <p>
         Or you already have an account?{' '}
-        <Link href='/login' as={NextLink} underline='hover' className='text-primary'>
-          Log in
-        </Link>
+        <NextLink href='/login' className='text-primary hover:underline'>Log in</NextLink>
       </p>
     </Form>
   );

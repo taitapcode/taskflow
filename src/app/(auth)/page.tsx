@@ -1,5 +1,4 @@
-import { Button } from '@heroui/button';
-import Link from 'next/link';
+import { Button } from '@/app/_components/UI';
 
 export default function Home() {
   return (
@@ -12,22 +11,13 @@ export default function Home() {
         <Button
           variant='bordered'
           size='lg'
-          className='w-10 border-gray-300 hover:border-gray-100 hover:text-gray-100'
+          className='min-w-12 border-gray-300 hover:border-gray-100 hover:text-gray-100'
           radius='full'
-          as={Link}
           href='/signup'
-          disableRipple
         >
           Sign up
         </Button>
-        <Button
-          size='lg'
-          className='w-10 bg-white text-black'
-          as={Link}
-          href='/login'
-          radius='full'
-          disableRipple
-        >
+        <Button size='lg' className='min-w-12 bg-white text-black' href='/login' radius='full'>
           Log in
         </Button>
       </div>

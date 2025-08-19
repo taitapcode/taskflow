@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '../_store/user';
 import { useEffect, useState } from 'react';
 import AvatarUploader from '../_components/AvatarUploader';
-import { Card, CardBody, Input, Button } from '@heroui/react';
+import { Card, CardBody, Input, Button } from '@/app/_components/UI';
 
 export default function AccountPage() {
   const router = useRouter();
