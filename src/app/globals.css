@@ -1,9 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Fascinate&display=swap');
 @import 'tailwindcss';
-@plugin '../lib/hero.ts';
-@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-fascinate: 'Fascinate', cursive;
+  /* App color tokens (replacing HeroUI tokens) */
+  --color-background: #0b0c10;
+  --color-foreground: #f3f4f6;
+  --color-foreground-500: #9ca3af;
+  --color-foreground-600: #6b7280;
+
+  --color-content2: #14161a; /* card background */
+  --color-content3: #1b1e24; /* table header / hover */
+  --color-content4: #252b36; /* active item bg */
+  --color-content1: #0e1015; /* app shell background */
+
+  /* Darker but more vibrant primary blue */
+  --color-primary: #2666ff;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+}
+
+/* Optional: dark variant overrides if needed */
+.dark {
+  --color-background: #0a0b0f;
+  --color-foreground: #e5e7eb;
+  --color-foreground-500: #a1a1aa;
+  --color-foreground-600: #8b9099;
+  --color-content2: #13161b;
+  --color-content3: #1a1f26;
+  --color-content1: #0b0d12;
+  --color-primary: #3d73f2; /* slightly brighter in dark mode */
+}
+
+/* Apply global background/text using tokens */
+html,
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  min-height: 100%;
 }
