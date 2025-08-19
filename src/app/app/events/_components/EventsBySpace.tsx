@@ -1,9 +1,9 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
 import { useRouter } from 'next/navigation';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name'>;
 type EventWithSpace = Tables<'Event'> & { Space?: Space | null };
@@ -30,7 +30,6 @@ function priorityColor(priority: Tables<'Event'>['priority'] | null | undefined)
 
 export default function EventsBySpace({ spaces, events }: Props) {
   const router = useRouter();
-  const [isFiltering, setIsFiltering] = useState(false);
 
   // Local filters (no URL sync)
   const [query, setQuery] = useState('');
@@ -42,7 +41,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
   const [priorityFilter, setPriorityFilter] = useState<EventPriority | 'all'>('all');
   const [hidePast, setHidePast] = useState(true);
   const sortOptions = ['date_asc', 'date_desc', 'created_desc', 'created_asc'] as const;
-  type SortBy = typeof sortOptions[number];
+  type SortBy = (typeof sortOptions)[number];
   const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
   const [sortBy, setSortBy] = useState<SortBy>('date_asc');
 
@@ -121,7 +120,10 @@ export default function EventsBySpace({ spaces, events }: Props) {
                 aria-label='Filter by space'
                 value={spaceFilter === 'all' ? 'all' : String(spaceFilter)}
                 onChange={(v) => setSpaceFilter(v === 'all' ? 'all' : Number(v))}
-                options={[{ label: 'All spaces', value: 'all' }, ...spaces.map((s) => ({ label: s.name, value: String(s.id) }))]}
+                options={[
+                  { label: 'All spaces', value: 'all' },
+                  ...spaces.map((s) => ({ label: s.name, value: String(s.id) })),
+                ]}
                 variant='flat'
                 size='sm'
               />
@@ -139,7 +141,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
                 variant='flat'
                 size='sm'
               />
-              <label className='flex items-center gap-2 text-sm text-foreground-600'>
+              <label className='text-foreground-600 flex items-center gap-2 text-sm'>
                 <input
                   type='checkbox'
                   className='accent-primary'
@@ -150,7 +152,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
               </label>
             </div>
             <div className='flex items-center gap-3'>
-              <label className='text-sm text-foreground-600'>Sort</label>
+              <label className='text-foreground-600 text-sm'>Sort</label>
               <DropdownSelect
                 aria-label='Sort events'
                 value={sortBy}
@@ -188,7 +190,12 @@ export default function EventsBySpace({ spaces, events }: Props) {
             header: 'Priority',
             className: 'w-[12%] min-w-[120px]',
             cell: (e) => (
-              <Chip size='sm' variant='solid' color={priorityColor(e.priority)} className='capitalize'>
+              <Chip
+                size='sm'
+                variant='solid'
+                color={priorityColor(e.priority)}
+                className='capitalize'
+              >
                 {e.priority ?? 'none'}
               </Chip>
             ),
@@ -208,14 +215,14 @@ export default function EventsBySpace({ spaces, events }: Props) {
                 <h2 className='text-lg font-medium'>{space.name}</h2>
               </div>
               {/* Mobile – stacked list */}
-              <ul className='md:hidden flex flex-col gap-2'>
+              <ul className='flex flex-col gap-2 md:hidden'>
                 {rows.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No events in this space</li>
                 )}
                 {rows.map((e) => (
                   <li
                     key={e.id}
-                    className='rounded-md border border-neutral-800 bg-content3/20 p-3 hover:bg-content3/40 transition-colors'
+                    className='bg-content3/20 hover:bg-content3/40 rounded-md border border-neutral-800 p-3 transition-colors'
                     role='button'
                     tabIndex={0}
                     onClick={() => router.push(`/app/events/${e.id}`)}
@@ -227,13 +234,20 @@ export default function EventsBySpace({ spaces, events }: Props) {
                     }}
                   >
                     <div className='flex items-start justify-between gap-2'>
-                      <p className='font-medium text-white truncate max-w-[70%]'>{e.Name}</p>
-                      <Chip size='sm' variant='solid' color={priorityColor(e.priority)} className='capitalize shrink-0'>
+                      <p className='max-w-[70%] truncate font-medium text-white'>{e.Name}</p>
+                      <Chip
+                        size='sm'
+                        variant='solid'
+                        color={priorityColor(e.priority)}
+                        className='shrink-0 capitalize'
+                      >
                         {e.priority ?? 'none'}
                       </Chip>
                     </div>
                     <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
-                      <span className='text-foreground-500'>{new Date(e.date).toLocaleDateString()}</span>
+                      <span className='text-foreground-500'>
+                        {new Date(e.date).toLocaleDateString()}
+                      </span>
                     </div>
                   </li>
                 ))}

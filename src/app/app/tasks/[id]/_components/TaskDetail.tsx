@@ -2,7 +2,7 @@
 import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
 import { Button, Chip, Input, DropdownSelect } from '@/app/_components/UI';
 import TaskActions from './TaskActions';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import createClient from '@/lib/supabase/browser';
@@ -21,7 +21,6 @@ function toLocalInput(dt?: string | null) {
   const mi = String(d.getMinutes()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
 }
-
 function toLocalInputFromDate(d: Date) {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -73,13 +72,13 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     (deadlineISO ?? null) !== (initial.current.deadline ?? null) ||
     (description || '') !== (initial.current.description || '');
 
-  function resetForm() {
+  const resetForm = useCallback(() => {
     setName(task.name);
     setStatus(task.status);
     setPriority(task.priority);
     setDeadline(toLocalInput(task.deadline));
     setDescription(task.description ?? '');
-  }
+  }, [task]);
 
   async function onSave(e: React.FormEvent) {
     e.preventDefault();
@@ -124,7 +123,6 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     const handler = (e: BeforeUnloadEvent) => {
       if (editing && isDirty) {
         e.preventDefault();
-        e.returnValue = '';
       }
     };
     window.addEventListener('beforeunload', handler);
@@ -150,7 +148,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     };
     window.addEventListener('keydown', keyHandler);
     return () => window.removeEventListener('keydown', keyHandler);
-  }, [editing, isDirty]);
+  }, [editing, isDirty, resetForm]);
 
   return (
     <>
