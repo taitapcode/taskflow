@@ -4,7 +4,7 @@ import SummaryCards from './_components/Dashboard/SummaryCards';
 import RecentTasks from './_components/Dashboard/RecentTasks';
 import UpcomingEvents from './_components/Dashboard/UpcomingEvents';
 import { Card, CardBody, Button, Chip } from '@/app/_components/UI';
-import { CalendarDays, ListTodo, User as UserIcon } from 'lucide-react';
+import { FolderPlus } from 'lucide-react';
 
 export default async function AppPage() {
   const supabase = await createClient();
@@ -78,38 +78,16 @@ export default async function AppPage() {
 
       <SummaryCards tasks={tasks} events={events} />
 
-      {/* Quick actions */}
+      {/* Quick action: Create Space */}
       <section className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
-        <Card shadow='sm' className='bg-content2'>
+        <Card shadow='sm' className='bg-content2 sm:col-span-1'>
           <CardBody className='flex items-center justify-between gap-3'>
             <div>
-              <p className='font-medium'>Tasks</p>
-              <p className='text-foreground-600 text-sm'>Review and update your tasks</p>
+              <p className='font-medium'>Spaces</p>
+              <p className='text-foreground-600 text-sm'>Organize tasks and events</p>
             </div>
-            <Button href='/app/tasks' variant='bordered' size='sm' radius='full'>
-              <ListTodo size={18} /> Open
-            </Button>
-          </CardBody>
-        </Card>
-        <Card shadow='sm' className='bg-content2'>
-          <CardBody className='flex items-center justify-between gap-3'>
-            <div>
-              <p className='font-medium'>Events</p>
-              <p className='text-foreground-600 text-sm'>See what’s coming up</p>
-            </div>
-            <Button href='/app/events' variant='bordered' size='sm' radius='full'>
-              <CalendarDays size={18} /> Open
-            </Button>
-          </CardBody>
-        </Card>
-        <Card shadow='sm' className='bg-content2'>
-          <CardBody className='flex items-center justify-between gap-3'>
-            <div>
-              <p className='font-medium'>Account</p>
-              <p className='text-foreground-600 text-sm'>Profile and preferences</p>
-            </div>
-            <Button href='/app/account' variant='bordered' size='sm' radius='full'>
-              <UserIcon size={18} /> Open
+            <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
+              <FolderPlus size={18} /> Create
             </Button>
           </CardBody>
         </Card>
