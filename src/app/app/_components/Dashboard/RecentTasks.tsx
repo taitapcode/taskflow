@@ -98,14 +98,65 @@ export default function RecentTasks({ tasks }: Props) {
         <div className='mb-3 flex items-center justify-between'>
           <h2 className='text-lg font-medium'>Recent Tasks</h2>
         </div>
-        <DataTable
-          ariaLabel='Recent tasks table'
-          data={tasks.slice(0, 10)}
-          columns={columns}
-          getKey={(t) => t.id}
-          emptyContent='No tasks found'
-          onRowClick={(t) => router.push(`/app/tasks/${t.id}`)}
-        />
+        {/* Mobile – stacked list */}
+        <ul className='md:hidden flex flex-col gap-2'>
+          {tasks.slice(0, 10).length === 0 && (
+            <li className='text-foreground-500 text-sm'>No tasks found</li>
+          )}
+          {tasks.slice(0, 10).map((t) => (
+            <li
+              key={t.id}
+              className='rounded-md border border-neutral-800 bg-content3/20 p-3 hover:bg-content3/40 transition-colors'
+              role='button'
+              tabIndex={0}
+              onClick={() => router.push(`/app/tasks/${t.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  router.push(`/app/tasks/${t.id}`);
+                }
+              }}
+            >
+              <div className='flex items-start justify-between gap-2'>
+                <p className='font-medium text-white truncate max-w-[70%]'>{t.name}</p>
+                <Chip size='sm' variant='solid' color={statusColor(t.status)} className='capitalize shrink-0'>
+                  {t.status}
+                </Chip>
+              </div>
+              <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
+                {t.Space?.name ? (
+                  <Chip
+                    size='sm'
+                    variant='solid'
+                    className={`${colorForLabel(t.Space.name).bg} ${colorForLabel(t.Space.name).text} border-transparent`}
+                  >
+                    {t.Space.name}
+                  </Chip>
+                ) : (
+                  <Chip size='sm' variant='flat' className='text-foreground-500'>—</Chip>
+                )}
+                <Chip size='sm' variant='solid' color={priorityColor(t.priority)} className='capitalize'>
+                  {t.priority ?? 'none'}
+                </Chip>
+                <span className='text-foreground-500'>
+                  {t.deadline ? new Date(t.deadline).toLocaleDateString() : 'No deadline'}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* Desktop – table */}
+        <div className='hidden md:block'>
+          <DataTable
+            ariaLabel='Recent tasks table'
+            data={tasks.slice(0, 10)}
+            columns={columns}
+            getKey={(t) => t.id}
+            emptyContent='No tasks found'
+            onRowClick={(t) => router.push(`/app/tasks/${t.id}`)}
+          />
+        </div>
       </CardBody>
     </Card>
   );

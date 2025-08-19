@@ -38,9 +38,9 @@ export default function UpcomingEvents({ events }: Props) {
               }}
             >
               <div className='min-w-0 w-full'>
-                <div className='flex items-center gap-2 min-w-0'>
+                <div className='flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
                   <p className='font-medium truncate min-w-0 flex-1 text-white'>{e.Name}</p>
-                  <div className='ml-2 flex items-center gap-2 shrink-0'>
+                  <div className='sm:ml-2 flex items-center gap-2 shrink-0'>
                     <span className='text-foreground-500 text-xs'>
                       {new Date(e.date).toLocaleDateString()}
                     </span>
