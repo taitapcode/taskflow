@@ -33,6 +33,8 @@ export default function SignUp() {
       options: {
         data: {
           display_name: data.displayName,
+          avatar_url:
+            'https://kvmosgysayrazohrupnz.supabase.co/storage/v1/object/public/avatar/default-avatar.jpg', // No avatar on signup
         },
       },
     });
@@ -49,7 +51,7 @@ export default function SignUp() {
         </div>
 
         {errors.root && (
-          <div className='mb-4 rounded-md border border-danger/30 bg-danger/10 p-3 text-danger text-sm'>
+          <div className='border-danger/30 bg-danger/10 text-danger mb-4 rounded-md border p-3 text-sm'>
             {errors.root.message}
           </div>
         )}
@@ -121,7 +123,13 @@ export default function SignUp() {
             }
           />
 
-          <Button className='mt-2 w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
+          <Button
+            className='mt-2 w-full'
+            color='primary'
+            type='submit'
+            size='lg'
+            disabled={isSubmitting}
+          >
             {isSubmitting ? <Loader2 className='animate-spin' size={18} /> : <LogIn size={18} />}
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </Button>
@@ -129,7 +137,9 @@ export default function SignUp() {
 
         <p className='text-foreground-600 mt-6 text-center text-sm'>
           Already have an account?{' '}
-          <NextLink href='/login' className='text-primary hover:underline'>Log in</NextLink>
+          <NextLink href='/login' className='text-primary hover:underline'>
+            Log in
+          </NextLink>
         </p>
       </CardBody>
     </Card>
