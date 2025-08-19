@@ -57,7 +57,6 @@ export default async function AppPage() {
   }
 
   const displayName =
-    // @ts-expect-error user_metadata may exist on Supabase user
     (user?.user_metadata?.display_name as string | undefined) ||
     (user?.email ? (user.email as string).split('@')[0] : undefined) ||
     'there';
