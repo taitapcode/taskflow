@@ -1,8 +1,8 @@
 "use client";
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip } from '@heroui/react';
-import Link from 'next/link';
 import { colorForLabel } from '@/lib/color';
+import { useRouter } from 'next/navigation';
 
 type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 };
 
 export default function UpcomingEvents({ events }: Props) {
+  const router = useRouter();
   const upcoming = events
     .filter((e) => new Date(e.date) >= new Date())
     .slice(0, 8);
@@ -23,14 +24,22 @@ export default function UpcomingEvents({ events }: Props) {
             <li className='text-foreground-500 text-sm'>No upcoming events</li>
           )}
           {upcoming.map((e) => (
-            <li key={e.id} className='flex items-start gap-3'>
+            <li
+              key={e.id}
+              className='flex items-start gap-3 rounded-md px-2 py-2 -mx-2 cursor-pointer hover:bg-content3/30'
+              role='button'
+              tabIndex={0}
+              onClick={() => router.push(`/app/events/${e.id}`)}
+              onKeyDown={(evt) => {
+                if (evt.key === 'Enter' || evt.key === ' ') {
+                  evt.preventDefault();
+                  router.push(`/app/events/${e.id}`);
+                }
+              }}
+            >
               <div className='min-w-0 w-full'>
                 <div className='flex items-center gap-2 min-w-0'>
-                  <p className='font-medium truncate min-w-0 flex-1'>
-                    <Link href={`/app/events/${e.id}`} className='text-white hover:underline underline-offset-4'>
-                      {e.Name}
-                    </Link>
-                  </p>
+                  <p className='font-medium truncate min-w-0 flex-1 text-white'>{e.Name}</p>
                   <div className='ml-2 flex items-center gap-2 shrink-0'>
                     <span className='text-foreground-500 text-xs'>
                       {new Date(e.date).toLocaleDateString()}
