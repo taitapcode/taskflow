@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { Button } from '@/app/_components/UI';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
@@ -11,7 +11,13 @@ type Props = {
   deadline: string | null;
 };
 
-export default function TaskActions({ id: _id, name: _name, spaceId, spaceName: _spaceName, deadline: _deadline }: Props) {
+export default function TaskActions({
+  id: _id,
+  name: _name,
+  spaceId,
+  spaceName: _spaceName,
+  deadline: _deadline,
+}: Props) {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
 
@@ -28,10 +34,11 @@ export default function TaskActions({ id: _id, name: _name, spaceId, spaceName: 
     } catch {}
   }, [link]);
 
-
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <Button href='/app/tasks' variant='bordered' size='sm' radius='full'>Back</Button>
+      <Button href='/app/tasks' variant='bordered' size='sm' radius='full'>
+        Back
+      </Button>
       <Button onClick={copyLink} variant='bordered' size='sm' radius='full'>
         {copied ? 'Copied!' : 'Copy Link'}
       </Button>

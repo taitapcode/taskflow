@@ -12,7 +12,13 @@ export type ChipProps = {
   variant?: 'solid' | 'flat';
 };
 
-export default function Chip({ className, children, size = 'md', color = 'default', variant = 'solid' }: ChipProps) {
+export default function Chip({
+  className,
+  children,
+  size = 'md',
+  color = 'default',
+  variant = 'solid',
+}: ChipProps) {
   const sizeClass = size === 'sm' ? 'text-[11px] h-6 px-2' : 'text-xs h-7 px-2.5';
   const base = 'inline-flex items-center justify-center rounded-full font-medium';
 
@@ -36,4 +42,3 @@ export default function Chip({ className, children, size = 'md', color = 'defaul
 
   return <span className={cn(base, sizeClass, palette[color], className)}>{children}</span>;
 }
-

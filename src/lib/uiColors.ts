@@ -17,7 +17,9 @@ export function taskStatusColor(status: Tables<'Task'>['status']): ChipPalette {
   }
 }
 
-export function taskPriorityColor(priority: Tables<'Task'>['priority'] | null | undefined): ChipPalette {
+export function taskPriorityColor(
+  priority: Tables<'Task'>['priority'] | null | undefined,
+): ChipPalette {
   switch (priority) {
     case 'low':
       return 'default';
@@ -32,7 +34,9 @@ export function taskPriorityColor(priority: Tables<'Task'>['priority'] | null | 
   }
 }
 
-export function eventPriorityColor(priority: Tables<'Event'>['priority'] | null | undefined): ChipPalette {
+export function eventPriorityColor(
+  priority: Tables<'Event'>['priority'] | null | undefined,
+): ChipPalette {
   switch (priority) {
     case 'low':
       return 'default';
@@ -46,4 +50,3 @@ export function eventPriorityColor(priority: Tables<'Event'>['priority'] | null 
       return 'default';
   }
 }
-

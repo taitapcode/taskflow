@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { Button } from '@/app/_components/UI';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
@@ -12,7 +12,13 @@ type Props = {
   description: string;
 };
 
-export default function EventActions({ id: _id, name: _name, spaceId, date: _date, description: _description }: Props) {
+export default function EventActions({
+  id: _id,
+  name: _name,
+  spaceId,
+  date: _date,
+  description: _description,
+}: Props) {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
 
@@ -29,10 +35,11 @@ export default function EventActions({ id: _id, name: _name, spaceId, date: _dat
     } catch {}
   }, [link]);
 
-
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <Button href='/app/events' variant='bordered' size='sm' radius='full'>Back</Button>
+      <Button href='/app/events' variant='bordered' size='sm' radius='full'>
+        Back
+      </Button>
       <Button onClick={copyLink} variant='bordered' size='sm' radius='full'>
         {copied ? 'Copied!' : 'Copy Link'}
       </Button>

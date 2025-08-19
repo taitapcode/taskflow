@@ -36,7 +36,12 @@ export default function DropdownSelect({
 
   const selected = useMemo(() => options.find((o) => o.value === value) ?? null, [options, value]);
 
-  const sizeClass = size === 'lg' ? 'h-12 text-base px-3' : size === 'sm' ? 'h-9 text-sm px-2.5' : 'h-10 text-sm px-3';
+  const sizeClass =
+    size === 'lg'
+      ? 'h-12 text-base px-3'
+      : size === 'sm'
+        ? 'h-9 text-sm px-2.5'
+        : 'h-10 text-sm px-3';
   const variantClass =
     variant === 'flat'
       ? 'bg-content2 text-foreground hover:bg-content2/80 focus:bg-content2/90'
@@ -113,7 +118,7 @@ export default function DropdownSelect({
 
   return (
     <label className={cn('flex w-full flex-col gap-1', className)}>
-      {label && <span className='text-xs text-foreground-600'>{label}</span>}
+      {label && <span className='text-foreground-600 text-xs'>{label}</span>}
       <div className='relative inline-block w-full'>
         <button
           type='button'
@@ -124,16 +129,16 @@ export default function DropdownSelect({
           onClick={() => !isDisabled && setOpen((o) => !o)}
           onKeyDown={onKeyDownBtn}
           className={cn(
-            'w-full rounded-md border border-neutral-700 text-left outline-none transition-colors',
+            'w-full rounded-md border border-neutral-700 text-left transition-colors outline-none',
             sizeClass,
             variantClass,
-            isDisabled && 'opacity-50 cursor-not-allowed',
+            isDisabled && 'cursor-not-allowed opacity-50',
           )}
         >
           <span className={cn('block truncate', !selected && 'opacity-60')}>
             {selected ? selected.label : placeholder}
           </span>
-          <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-600'>
+          <span className='text-foreground-600 pointer-events-none absolute top-1/2 right-3 -translate-y-1/2'>
             <svg width='14' height='14' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
               <path d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z' />
             </svg>
@@ -146,7 +151,7 @@ export default function DropdownSelect({
             role='listbox'
             tabIndex={-1}
             onKeyDown={onKeyDownList}
-            className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-neutral-700 bg-content1 py-1 shadow-lg focus:outline-none'
+            className='bg-content1 absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-neutral-700 py-1 shadow-lg focus:outline-none'
           >
             {options.map((opt, idx) => {
               const isActive = idx === activeIndex || opt.value === value;
@@ -156,7 +161,7 @@ export default function DropdownSelect({
                   role='option'
                   aria-selected={opt.value === value}
                   className={cn(
-                    'cursor-pointer select-none px-3 py-2 text-sm hover:bg-content3/40',
+                    'hover:bg-content3/40 cursor-pointer px-3 py-2 text-sm select-none',
                     isActive && 'bg-content3/40',
                   )}
                   onMouseEnter={() => setActiveIndex(idx)}
@@ -172,4 +177,3 @@ export default function DropdownSelect({
     </label>
   );
 }
-

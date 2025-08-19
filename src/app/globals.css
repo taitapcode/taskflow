@@ -63,14 +63,30 @@ body {
 }
 
 @keyframes float-a {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(12px, -8px, 0) scale(1.05); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 @keyframes float-b {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-10px, 10px, 0) scale(1.04); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-10px, 10px, 0) scale(1.04);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
-.animate-float-a { animation: float-a 8s ease-in-out infinite; }
-.animate-float-b { animation: float-b 10s ease-in-out infinite; }
+.animate-float-a {
+  animation: float-a 8s ease-in-out infinite;
+}
+.animate-float-b {
+  animation: float-b 10s ease-in-out infinite;
+}

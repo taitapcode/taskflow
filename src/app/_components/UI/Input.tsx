@@ -19,16 +19,16 @@ export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   {
-  label,
-  size = 'md',
-  variant = 'bordered',
-  startContent,
-  endContent,
-  isInvalid,
-  isDisabled,
-  errorMessage,
-  className,
-  ...props
+    label,
+    size = 'md',
+    variant = 'bordered',
+    startContent,
+    endContent,
+    isInvalid,
+    isDisabled,
+    errorMessage,
+    className,
+    ...props
   }: InputProps,
   ref,
 ) {
@@ -44,12 +44,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
 
   return (
     <label className='flex w-full flex-col gap-1'>
-      {label && <span className='text-xs text-foreground-600'>{label}</span>}
+      {label && <span className='text-foreground-600 text-xs'>{label}</span>}
       <div className='relative'>
         {startContent && (
           <span
             className={cn(
-              'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2',
+              'pointer-events-none absolute top-1/2 left-3 -translate-y-1/2',
               isInvalid ? 'text-danger' : 'text-current',
             )}
           >
@@ -59,10 +59,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
         <input
           ref={ref}
           className={cn(
-            'w-full rounded-md border outline-none transition-colors',
+            'w-full rounded-md border transition-colors outline-none',
             isInvalid
-              ? 'text-danger placeholder:text-danger/70 focus:ring-2 focus:ring-danger/60'
-              : 'text-current placeholder:text-current placeholder:opacity-60 focus:ring-2 focus:ring-primary/60',
+              ? 'text-danger placeholder:text-danger/70 focus:ring-danger/60 focus:ring-2'
+              : 'focus:ring-primary/60 text-current placeholder:text-current placeholder:opacity-60 focus:ring-2',
             sizeClasses,
             leftPad,
             rightPad,
@@ -75,14 +75,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
           {...props}
         />
         {endContent && (
-          <span className='absolute right-3 top-1/2 -translate-y-1/2'>
-            {endContent}
-          </span>
+          <span className='absolute top-1/2 right-3 -translate-y-1/2'>{endContent}</span>
         )}
       </div>
-      {errorMessage && (
-        <span className='text-danger text-xs leading-4'>{errorMessage}</span>
-      )}
+      {errorMessage && <span className='text-danger text-xs leading-4'>{errorMessage}</span>}
     </label>
   );
 });

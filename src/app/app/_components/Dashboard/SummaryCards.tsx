@@ -1,14 +1,7 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody } from '@/app/_components/UI';
-import {
-  ListTodo,
-  Circle,
-  Clock3,
-  CheckCircle2,
-  AlertTriangle,
-  CalendarDays,
-} from 'lucide-react';
+import { ListTodo, Circle, Clock3, CheckCircle2, AlertTriangle, CalendarDays } from 'lucide-react';
 
 type Props = {
   tasks: Tables<'Task'>[];
@@ -59,12 +52,14 @@ export default function SummaryCards({ tasks, events }: Props) {
         <Card key={label} shadow='sm' className='bg-content2 border border-neutral-700'>
           <CardBody className='p-4'>
             <div className='flex items-center gap-3'>
-              <div className={`flex h-9 w-9 items-center justify-center rounded-md ${colorClasses[color]}`}>
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-md ${colorClasses[color]}`}
+              >
                 <Icon size={18} />
               </div>
               <div className='flex flex-col'>
-                <span className='text-xs text-foreground-500'>{label}</span>
-                <span className='text-xl font-semibold leading-tight'>{value}</span>
+                <span className='text-foreground-500 text-xs'>{label}</span>
+                <span className='text-xl leading-tight font-semibold'>{value}</span>
               </div>
             </div>
           </CardBody>

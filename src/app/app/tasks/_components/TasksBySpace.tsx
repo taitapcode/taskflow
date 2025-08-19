@@ -69,7 +69,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
     'priority_desc',
     'priority_asc',
   ] as const;
-  type SortBy = typeof sortOptions[number];
+  type SortBy = (typeof sortOptions)[number];
   const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
   const [sortBy, setSortBy] = useState<SortBy>('created_desc');
 

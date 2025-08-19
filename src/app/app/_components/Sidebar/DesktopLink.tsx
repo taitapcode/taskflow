@@ -20,9 +20,8 @@ export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProp
 
   useEffect(() => {
     // Check if the current route matches the link's href
-    const active = href === '/app'
-      ? pathname === '/app'
-      : pathname === href || pathname.startsWith(href + '/');
+    const active =
+      href === '/app' ? pathname === '/app' : pathname === href || pathname.startsWith(href + '/');
     setIsActive(active);
   }, [pathname, href]);
 
@@ -40,7 +39,7 @@ export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProp
       {/* Active indicator */}
       <motion.span
         layout
-        className='absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-full bg-primary'
+        className='bg-primary absolute top-1/2 left-0 h-6 w-0.5 -translate-y-1/2 rounded-full'
         animate={{ opacity: isActive ? 1 : 0 }}
         transition={{ duration: 0.15 }}
       />

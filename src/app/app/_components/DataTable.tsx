@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React from 'react';
 import cn from '@/lib/cn';
 
@@ -33,14 +33,14 @@ export default function DataTable<T>({
   return (
     <div className={cn('overflow-x-auto', className)} aria-label={ariaLabel} role='region'>
       <table className='min-w-full border-separate border-spacing-0 text-sm'>
-        <thead className='sticky top-0 z-10 bg-content3/60 backdrop-blur supports-[backdrop-filter]:bg-content3/40'>
+        <thead className='bg-content3/60 supports-[backdrop-filter]:bg-content3/40 sticky top-0 z-10 backdrop-blur'>
           <tr>
             {columns.map((c) => (
               <th
                 key={c.key}
                 scope='col'
                 className={cn(
-                  'px-3 py-2 text-left font-medium text-foreground-600 border-b border-neutral-700',
+                  'text-foreground-600 border-b border-neutral-700 px-3 py-2 text-left font-medium',
                   c.className,
                 )}
               >
@@ -53,7 +53,7 @@ export default function DataTable<T>({
           {data.length === 0 ? (
             <tr>
               <td
-                className='px-3 py-6 text-center text-foreground-500 border-b border-neutral-800'
+                className='text-foreground-500 border-b border-neutral-800 px-3 py-6 text-center'
                 colSpan={columns.length}
               >
                 {emptyContent}
@@ -84,7 +84,7 @@ export default function DataTable<T>({
                   }
                 >
                   {columns.map((c) => (
-                    <td key={c.key} className='px-3 py-2 align-middle border-b border-neutral-800'>
+                    <td key={c.key} className='border-b border-neutral-800 px-3 py-2 align-middle'>
                       {c.cell(row)}
                     </td>
                   ))}

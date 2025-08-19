@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
 import { Button, Chip, Input, DropdownSelect } from '@/app/_components/UI';
 import EventActions from './EventActions';
@@ -88,7 +88,8 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
     const dateISO = new Date(date).toISOString();
     if (event.date !== dateISO) patch.date = dateISO;
     if ((priority ?? null) !== (event.priority ?? null)) patch.priority = priority ?? null;
-    if ((description || null) !== (event.description || null)) patch.description = description || null;
+    if ((description || null) !== (event.description || null))
+      patch.description = description || null;
     const { error: upErr } = await supabase.from('Event').update(patch).eq('id', event.id);
     setSaving(false);
     if (upErr) {
@@ -180,7 +181,12 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
               <div>
                 <p className='text-foreground-500 text-sm'>Priority</p>
                 <div className='mt-1'>
-                  <Chip size='sm' variant='solid' color={eventPriorityColor(event.priority)} className='capitalize'>
+                  <Chip
+                    size='sm'
+                    variant='solid'
+                    color={eventPriorityColor(event.priority)}
+                    className='capitalize'
+                  >
                     {event.priority ?? 'none'}
                   </Chip>
                 </div>
@@ -189,7 +195,10 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                 <p className='text-foreground-500 text-sm'>Created</p>
                 <p className='font-medium'>
                   {new Date(event.created_at).toLocaleString()}
-                  <span className='text-foreground-500'> • {formatRelativeTime(event.created_at)}</span>
+                  <span className='text-foreground-500'>
+                    {' '}
+                    • {formatRelativeTime(event.created_at)}
+                  </span>
                 </p>
               </div>
               <div className='sm:col-span-2'>
@@ -200,17 +209,24 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
           ) : (
             <form id='event-edit-form' className='grid gap-4 sm:grid-cols-2' onSubmit={onSave}>
               {error && (
-                <div className='sm:col-span-2 text-danger text-sm border border-danger/40 rounded-md p-2 bg-danger/10'>
+                <div className='text-danger border-danger/40 bg-danger/10 rounded-md border p-2 text-sm sm:col-span-2'>
                   {error}
                 </div>
               )}
               {!error && saved && (
-                <div className='sm:col-span-2 text-success text-sm border border-success/40 rounded-md p-2 bg-success/10'>
+                <div className='text-success border-success/40 bg-success/10 rounded-md border p-2 text-sm sm:col-span-2'>
                   Saved
                 </div>
               )}
               <div className='sm:col-span-2'>
-                <Input ref={nameRef} label='Name' value={name} onChange={(e) => setName(e.target.value)} required isDisabled={saving} />
+                <Input
+                  ref={nameRef}
+                  label='Name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  isDisabled={saving}
+                />
               </div>
               <div>
                 <Input
@@ -225,7 +241,9 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDate(toLocalInputFromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)))}
+                    onClick={() =>
+                      setDate(toLocalInputFromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)))
+                    }
                     isDisabled={saving}
                   >
                     +1 day
@@ -234,7 +252,11 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDate(toLocalInputFromDate(nextWeekday(date ? new Date(date) : new Date(), 1)))}
+                    onClick={() =>
+                      setDate(
+                        toLocalInputFromDate(nextWeekday(date ? new Date(date) : new Date(), 1)),
+                      )
+                    }
                     isDisabled={saving}
                   >
                     Next Monday
@@ -243,7 +265,11 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDate(toLocalInputFromDate(nextWeekday(date ? new Date(date) : new Date(), 5)))}
+                    onClick={() =>
+                      setDate(
+                        toLocalInputFromDate(nextWeekday(date ? new Date(date) : new Date(), 5)),
+                      )
+                    }
                     isDisabled={saving}
                   >
                     Next Friday
@@ -256,9 +282,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                   value={priority ?? ''}
                   onChange={(v) => {
                     const opts = ['low', 'medium', 'high', 'imidiate'] as const;
-                    const isPriority = (
-                      x: string,
-                    ): x is NonNullable<Tables<'Event'>['priority']> =>
+                    const isPriority = (x: string): x is NonNullable<Tables<'Event'>['priority']> =>
                       (opts as readonly string[]).includes(x);
                     setPriority(v === '' ? null : isPriority(v) ? v : null);
                   }}
@@ -274,17 +298,22 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                 />
               </div>
               <div className='sm:col-span-2'>
-                <label className='text-xs text-foreground-600'>Description</label>
+                <label className='text-foreground-600 text-xs'>Description</label>
                 <textarea
-                  className='mt-1 w-full min-h-28 rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60'
+                  className='focus:ring-primary/60 mt-1 min-h-28 w-full rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2'
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={saving}
                   placeholder='Describe the event'
                 />
               </div>
-              <div className='sm:col-span-2 flex items-center gap-2'>
-                <Button type='submit' isDisabled={saving || !isDirty} isLoading={saving} radius='full'>
+              <div className='flex items-center gap-2 sm:col-span-2'>
+                <Button
+                  type='submit'
+                  isDisabled={saving || !isDirty}
+                  isLoading={saving}
+                  radius='full'
+                >
                   Save changes
                 </Button>
                 <Button

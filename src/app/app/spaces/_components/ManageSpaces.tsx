@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import createClient from '@/lib/supabase/browser';
 import { useState } from 'react';
@@ -61,7 +61,12 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
                 errorMessage={error ?? undefined}
               />
             </div>
-            <Button type='submit' isDisabled={saving || !name.trim()} isLoading={saving} radius='full'>
+            <Button
+              type='submit'
+              isDisabled={saving || !name.trim()}
+              isLoading={saving}
+              radius='full'
+            >
               Create Space
             </Button>
           </form>
@@ -76,9 +81,11 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
           ) : (
             <ul className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
               {spaces.map((s) => (
-                <li key={s.id} className='rounded-md border border-neutral-800 bg-content3/20 p-3'>
+                <li key={s.id} className='bg-content3/20 rounded-md border border-neutral-800 p-3'>
                   <p className='font-medium'>{s.name}</p>
-                  <p className='text-foreground-600 text-xs mt-1'>Created {new Date(s.created_at).toLocaleDateString()}</p>
+                  <p className='text-foreground-600 mt-1 text-xs'>
+                    Created {new Date(s.created_at).toLocaleDateString()}
+                  </p>
                 </li>
               ))}
             </ul>

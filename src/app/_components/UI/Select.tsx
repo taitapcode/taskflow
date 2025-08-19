@@ -29,7 +29,8 @@ export default function Select({
   children,
   ...props
 }: SelectProps) {
-  const sizeClasses = size === 'lg' ? 'h-12 text-base' : size === 'sm' ? 'h-9 text-sm' : 'h-10 text-sm';
+  const sizeClasses =
+    size === 'lg' ? 'h-12 text-base' : size === 'sm' ? 'h-9 text-sm' : 'h-10 text-sm';
   const leftPad = startContent ? 'pl-10' : 'pl-3';
   const rightPad = endContent ? 'pr-10' : 'pr-9';
   // Use solid backgrounds to avoid UA white flash on focus/open
@@ -41,19 +42,24 @@ export default function Select({
 
   return (
     <label className='flex w-full flex-col gap-1'>
-      {label && <span className='text-xs text-foreground-600'>{label}</span>}
+      {label && <span className='text-foreground-600 text-xs'>{label}</span>}
       <div className='relative'>
         {startContent && (
-          <span className={cn('pointer-events-none absolute left-3 top-1/2 -translate-y-1/2', isInvalid ? 'text-danger' : 'text-current')}>
+          <span
+            className={cn(
+              'pointer-events-none absolute top-1/2 left-3 -translate-y-1/2',
+              isInvalid ? 'text-danger' : 'text-current',
+            )}
+          >
             {startContent}
           </span>
         )}
         <select
           className={cn(
-            'w-full rounded-md border outline-none transition-colors appearance-none',
+            'w-full appearance-none rounded-md border transition-colors outline-none',
             isInvalid
-              ? 'text-danger placeholder:text-danger/70 focus:ring-2 focus:ring-danger/60'
-              : 'text-current placeholder:text-current placeholder:opacity-60 focus:ring-2 focus:ring-primary/60',
+              ? 'text-danger placeholder:text-danger/70 focus:ring-danger/60 focus:ring-2'
+              : 'focus:ring-primary/60 text-current placeholder:text-current placeholder:opacity-60 focus:ring-2',
             sizeClasses,
             leftPad,
             rightPad,
@@ -68,7 +74,7 @@ export default function Select({
         >
           {children}
         </select>
-        <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-foreground-600'>
+        <span className='text-foreground-600 pointer-events-none absolute top-1/2 right-3 -translate-y-1/2'>
           {endContent ?? (
             <svg width='14' height='14' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
               <path d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z' />

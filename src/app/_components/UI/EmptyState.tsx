@@ -70,9 +70,16 @@ function Illustration({ variant = 'generic' }: { variant?: Props['variant'] }) {
   );
 }
 
-export default function EmptyState({ className, title, description, variant = 'generic', actionHref, actionLabel }: Props) {
+export default function EmptyState({
+  className,
+  title,
+  description,
+  variant = 'generic',
+  actionHref,
+  actionLabel,
+}: Props) {
   return (
-    <div className={cn('relative flex flex-col items-center text-center gap-4', className)}>
+    <div className={cn('relative flex flex-col items-center gap-4 text-center', className)}>
       {/* Animated gradient backdrop */}
       <div className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
         <div className='empty-orb orb--primary animate-float-a' />

@@ -40,7 +40,7 @@ export default function Login() {
         </div>
 
         {errors.root && (
-          <div className='mb-4 rounded-md border border-danger/30 bg-danger/10 p-3 text-danger text-sm'>
+          <div className='border-danger/30 bg-danger/10 text-danger mb-4 rounded-md border p-3 text-sm'>
             {errors.root.message}
           </div>
         )}
@@ -79,15 +79,23 @@ export default function Login() {
             }
           />
 
-          <Button className='mt-2 w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}> 
-            {isSubmitting ? <Loader2 className='animate-spin' size={18} /> : <LogIn size={18} />} 
+          <Button
+            className='mt-2 w-full'
+            color='primary'
+            type='submit'
+            size='lg'
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <Loader2 className='animate-spin' size={18} /> : <LogIn size={18} />}
             {isSubmitting ? 'Logging in…' : 'Log in'}
           </Button>
         </Form>
 
         <p className='text-foreground-600 mt-6 text-center text-sm'>
           Don&apos;t have an account?{' '}
-          <NextLink href='/signup' className='text-primary hover:underline'>Sign up</NextLink>
+          <NextLink href='/signup' className='text-primary hover:underline'>
+            Sign up
+          </NextLink>
         </p>
       </CardBody>
     </Card>

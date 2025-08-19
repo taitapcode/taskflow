@@ -33,7 +33,7 @@ export default function DesktopSidebar() {
 
   return (
     <motion.nav
-      className='bg-content2/80 backdrop-blur hidden h-full w-[80px] flex-col justify-between overflow-hidden border-r border-neutral-800 p-3 select-none md:flex'
+      className='bg-content2/80 hidden h-full w-[80px] flex-col justify-between overflow-hidden border-r border-neutral-800 p-3 backdrop-blur select-none md:flex'
       animate={{ width: open ? '230px' : '80px' }}
       onMouseEnter={setOpen}
       onMouseLeave={setClose}

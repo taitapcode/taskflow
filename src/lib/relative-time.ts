@@ -21,4 +21,3 @@ export function formatRelativeTime(input: string | Date): string {
   }
   return rtf.format(0, 'second');
 }
-

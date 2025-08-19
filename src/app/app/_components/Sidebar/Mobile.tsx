@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { links } from './Desktop';
@@ -6,12 +6,13 @@ import { links } from './Desktop';
 export default function MobileSidebar() {
   const pathname = usePathname();
   return (
-    <nav className='md:hidden fixed bottom-3 left-1/2 z-40 w-[92%] max-w-xl -translate-x-1/2 rounded-2xl border border-neutral-800 bg-content2/80 px-2 py-1.5 backdrop-blur'>
+    <nav className='bg-content2/80 fixed bottom-3 left-1/2 z-40 w-[92%] max-w-xl -translate-x-1/2 rounded-2xl border border-neutral-800 px-2 py-1.5 backdrop-blur md:hidden'>
       <ul className='flex items-center justify-around'>
         {links.map((l) => {
-          const active = l.href === '/app'
-            ? pathname === '/app'
-            : pathname === l.href || pathname.startsWith(l.href + '/');
+          const active =
+            l.href === '/app'
+              ? pathname === '/app'
+              : pathname === l.href || pathname.startsWith(l.href + '/');
           const Icon = l.icon;
           return (
             <li key={l.href}>

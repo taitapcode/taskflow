@@ -17,9 +17,7 @@ export default function AccountPage() {
   const [messageType, setMessageType] = useState<'success' | 'danger' | null>(null);
 
   const isDirty = useMemo(() => {
-    return (
-      (user?.displayName ?? '') !== displayName || (user?.avatarUrl ?? '') !== avatarUrl
-    );
+    return (user?.displayName ?? '') !== displayName || (user?.avatarUrl ?? '') !== avatarUrl;
   }, [displayName, avatarUrl, user?.displayName, user?.avatarUrl]);
 
   function extractAvatarPath(publicUrl: string | null | undefined) {
@@ -126,7 +124,11 @@ export default function AccountPage() {
 
             {message && (
               <div className='mt-3'>
-                <Chip size='sm' variant='flat' color={messageType === 'danger' ? 'danger' : 'success'}>
+                <Chip
+                  size='sm'
+                  variant='flat'
+                  color={messageType === 'danger' ? 'danger' : 'success'}
+                >
                   {message}
                 </Chip>
               </div>

@@ -31,4 +31,3 @@ export function colorForLabel(label: string | number | null | undefined): ColorC
   const { bg, text } = palette[idx];
   return { bg, text };
 }
-

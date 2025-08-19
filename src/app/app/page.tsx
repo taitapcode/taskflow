@@ -37,10 +37,7 @@ export default async function AppPage() {
   let events: EventWithSpace[] = [];
 
   if (spaceIds.length > 0) {
-    const [
-      { data: tasksData },
-      { data: eventsData },
-    ]: [
+    const [{ data: tasksData }, { data: eventsData }]: [
       { data: TaskWithSpace[] | null },
       { data: EventWithSpace[] | null },
     ] = await Promise.all([
