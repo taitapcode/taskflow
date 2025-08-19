@@ -27,7 +27,7 @@ export default function User() {
         }}
         className='w-60 overflow-hidden text-lg whitespace-nowrap'
       >
-        {user?.displayName}
+        {user?.displayName ?? 'Account'}
       </motion.span>
     </Link>
   );

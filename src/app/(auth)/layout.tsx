@@ -1,7 +1,5 @@
 import createClient from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { ShootingStars } from './_components/ShootingStars';
-import { StarsBackground } from './_components/StarBackground';
 
 export default async function RootLayout({
   children,
@@ -16,10 +14,10 @@ export default async function RootLayout({
   if (user) redirect('/app');
 
   return (
-    <div className='flex h-screen items-center justify-center'>
-      <StarsBackground />
-      <ShootingStars starHeight={3} starColor='#fff' />
-      <main className='z-10'>{children}</main>
+    <div className='relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(60%_80%_at_50%_-10%,rgba(255,255,255,0.08),transparent_70%)] px-4'>
+      <main className='flex w-full max-w-5xl items-center justify-center'>
+        {children}
+      </main>
     </div>
   );
 }

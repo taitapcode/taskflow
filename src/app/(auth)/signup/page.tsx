@@ -1,15 +1,18 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupSchema } from './schema';
 import createClient from '@/lib/supabase/browser';
-import { Form, Input, Button } from '@/app/_components/UI';
+import { Form, Input, Button, Card, CardBody } from '@/app/_components/UI';
 import NextLink from 'next/link';
-import { LockKeyhole, LogIn, Mail, User } from 'lucide-react';
+import { Eye, EyeOff, Loader2, LockKeyhole, LogIn, Mail, User } from 'lucide-react';
 
 export default function SignUp() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const {
     register,
     handleSubmit,
@@ -38,63 +41,97 @@ export default function SignUp() {
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit(onSubmit)}
-      className='bg-foreground text-background flex w-100 flex-col items-center gap-5 rounded-xl p-10'
-    >
-      <h1 className='text-3xl font-semibold'>Sign Up</h1>
-      {errors.root && <p className='text-danger'>{errors.root.message}</p>}
-      <Input
-        {...register('displayName')}
-        placeholder='Display Name'
-        variant='bordered'
-        color='primary'
-        size='lg'
-        errorMessage={errors.displayName?.message || ''}
-        isInvalid={!!errors.displayName}
-        startContent={<User />}
-      />
-      <Input
-        {...register('email')}
-        placeholder='Email'
-        variant='bordered'
-        color='primary'
-        size='lg'
-        errorMessage={errors.email?.message || ''}
-        isInvalid={!!errors.email}
-        startContent={<Mail />}
-      />
+    <Card className='w-[520px] max-w-[92vw] backdrop-blur-md'>
+      <CardBody className='p-6 sm:p-8'>
+        <div className='mb-6 text-center'>
+          <h1 className='text-2xl font-semibold'>Create your account</h1>
+          <p className='text-foreground-600 mt-1 text-sm'>Start organizing tasks with TaskFlow</p>
+        </div>
 
-      <Input
-        {...register('password')}
-        placeholder='Password'
-        type='password'
-        variant='bordered'
-        color='primary'
-        size='lg'
-        errorMessage={errors.password?.message || ''}
-        isInvalid={!!errors.password}
-        startContent={<LockKeyhole />}
-      />
-      <Input
-        {...register('confirmPassword')}
-        placeholder='Confirm Password'
-        type='password'
-        variant='bordered'
-        color='primary'
-        size='lg'
-        errorMessage={errors.confirmPassword?.message || ''}
-        isInvalid={!!errors.confirmPassword}
-        startContent={<LockKeyhole />}
-      />
+        {errors.root && (
+          <div className='mb-4 rounded-md border border-danger/30 bg-danger/10 p-3 text-danger text-sm'>
+            {errors.root.message}
+          </div>
+        )}
 
-      <Button className='w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
-        <LogIn /> Sign Up
-      </Button>
-      <p>
-        Or you already have an account?{' '}
-        <NextLink href='/login' className='text-primary hover:underline'>Log in</NextLink>
-      </p>
-    </Form>
+        <Form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+          <Input
+            {...register('displayName')}
+            label='Display name'
+            placeholder='e.g. Alex Johnson'
+            variant='flat'
+            size='lg'
+            errorMessage={errors.displayName?.message || ''}
+            isInvalid={!!errors.displayName}
+            startContent={<User size={18} />}
+          />
+
+          <Input
+            {...register('email')}
+            label='Email'
+            placeholder='you@example.com'
+            variant='flat'
+            size='lg'
+            errorMessage={errors.email?.message || ''}
+            isInvalid={!!errors.email}
+            startContent={<Mail size={18} />}
+          />
+
+          <Input
+            {...register('password')}
+            label='Password'
+            placeholder='Create a password'
+            type={showPassword ? 'text' : 'password'}
+            variant='flat'
+            size='lg'
+            errorMessage={errors.password?.message || ''}
+            isInvalid={!!errors.password}
+            startContent={<LockKeyhole size={18} />}
+            endContent={
+              <button
+                type='button'
+                className='text-foreground-600 hover:text-foreground'
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            }
+          />
+
+          <Input
+            {...register('confirmPassword')}
+            label='Confirm password'
+            placeholder='Re-enter your password'
+            type={showConfirm ? 'text' : 'password'}
+            variant='flat'
+            size='lg'
+            errorMessage={errors.confirmPassword?.message || ''}
+            isInvalid={!!errors.confirmPassword}
+            startContent={<LockKeyhole size={18} />}
+            endContent={
+              <button
+                type='button'
+                className='text-foreground-600 hover:text-foreground'
+                onClick={() => setShowConfirm((s) => !s)}
+                aria-label={showConfirm ? 'Hide password' : 'Show password'}
+              >
+                {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            }
+          />
+
+          <Button className='mt-2 w-full' color='primary' type='submit' size='lg' disabled={isSubmitting}>
+            {isSubmitting ? <Loader2 className='animate-spin' size={18} /> : <LogIn size={18} />}
+            {isSubmitting ? 'Creating account…' : 'Create account'}
+          </Button>
+        </Form>
+
+        <p className='text-foreground-600 mt-6 text-center text-sm'>
+          Already have an account?{' '}
+          <NextLink href='/login' className='text-primary hover:underline'>Log in</NextLink>
+        </p>
+      </CardBody>
+    </Card>
   );
 }
