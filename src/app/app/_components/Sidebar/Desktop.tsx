@@ -6,7 +6,7 @@ import Link, { type SidebarLinkProps } from './DesktopLink';
 import Image from 'next/image';
 import User from './User';
 
-const links: SidebarLinkProps[] = [
+export const links: SidebarLinkProps[] = [
   {
     href: '/app',
     label: 'Dashboard',
@@ -28,7 +28,7 @@ export default function DesktopSidebar() {
 
   return (
     <motion.nav
-      className='bg-content2 hidden h-full w-[80px] flex-col justify-between overflow-hidden p-3 select-none md:flex'
+      className='bg-content2/80 backdrop-blur hidden h-full w-[80px] flex-col justify-between overflow-hidden border-r border-neutral-800 p-3 select-none md:flex'
       animate={{ width: open ? '230px' : '80px' }}
       onMouseEnter={setOpen}
       onMouseLeave={setClose}
@@ -43,7 +43,7 @@ export default function DesktopSidebar() {
             TaskFlow
           </motion.span>
         </div>
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-1.5'>
           {links.map((link) => (
             <Link key={link.href} {...link} />
           ))}
