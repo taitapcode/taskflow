@@ -17,7 +17,8 @@ export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size
   color?: string;
 };
 
-export default function Input({
+const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
   label,
   size = 'md',
   variant = 'bordered',
@@ -28,7 +29,9 @@ export default function Input({
   errorMessage,
   className,
   ...props
-}: InputProps) {
+  }: InputProps,
+  ref,
+) {
   const sizeClasses =
     size === 'lg' ? 'h-12 text-base' : size === 'sm' ? 'h-9 text-sm' : 'h-10 text-sm';
   const leftPad = startContent ? 'pl-10' : 'pl-3';
@@ -54,6 +57,7 @@ export default function Input({
           </span>
         )}
         <input
+          ref={ref}
           className={cn(
             'w-full rounded-md border outline-none transition-colors',
             isInvalid
@@ -81,4 +85,6 @@ export default function Input({
       )}
     </label>
   );
-}
+});
+
+export default Input;
