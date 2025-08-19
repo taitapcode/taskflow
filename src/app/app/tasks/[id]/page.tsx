@@ -4,8 +4,11 @@ import TaskDetail from './_components/TaskDetail';
 
 type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
-export default async function TaskDetailPage({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
+type Props = { params: Promise<{ id: string }> };
+
+export default async function TaskDetailPage({ params }: Props) {
+  const { id: idStr } = await params;
+  const id = Number(idStr);
   if (Number.isNaN(id)) return <main>Invalid task id</main>;
 
   const supabase = await createClient();

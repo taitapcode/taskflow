@@ -4,8 +4,14 @@ import EventDetail from './_components/EventDetail';
 
 type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function EventDetailPage({ params }: Props) {
+  const { id: idStr } = await params;
+  const id = Number(idStr);
   if (Number.isNaN(id)) return <main>Invalid event id</main>;
 
   const supabase = await createClient();
