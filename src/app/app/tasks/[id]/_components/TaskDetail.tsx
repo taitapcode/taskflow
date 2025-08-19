@@ -1,8 +1,8 @@
-"use client";
-import type { Tables } from '@/lib/supabase/database.types';
+'use client';
+import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
 import { Button, Chip, Input, DropdownSelect } from '@/app/_components/UI';
 import TaskActions from './TaskActions';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import createClient from '@/lib/supabase/browser';
@@ -94,13 +94,14 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     }
     setSaving(true);
     const supabase = createClient();
-    const patch: Partial<Tables<'Task'>> = {};
+    const patch: TablesUpdate<'Task'> = {};
     if (name !== task.name) patch.name = name.trim();
     if (status !== task.status) patch.status = status;
-    if ((priority ?? null) !== (task.priority ?? null)) patch.priority = (priority ?? null) as any;
+    if ((priority ?? null) !== (task.priority ?? null)) patch.priority = priority ?? null;
     const deadlineISO = deadline ? new Date(deadline).toISOString() : null;
-    if ((task.deadline ?? null) !== (deadlineISO ?? null)) patch.deadline = deadlineISO as any;
-    if ((description || null) !== (task.description || null)) patch.description = description || null;
+    if ((task.deadline ?? null) !== (deadlineISO ?? null)) patch.deadline = deadlineISO;
+    if ((description || null) !== (task.description || null))
+      patch.description = description || null;
     const { error: upErr } = await supabase.from('Task').update(patch).eq('id', task.id);
     setSaving(false);
     if (upErr) {
@@ -182,28 +183,41 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
           {!editing ? (
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
-                <p className='text-sm text-foreground-500'>Status</p>
+                <p className='text-foreground-500 text-sm'>Status</p>
                 <div className='mt-1'>
-                  <Chip size='sm' variant='solid' color={taskStatusColor(task.status)} className='capitalize'>
+                  <Chip
+                    size='sm'
+                    variant='solid'
+                    color={taskStatusColor(task.status)}
+                    className='capitalize'
+                  >
                     {task.status}
                   </Chip>
                 </div>
               </div>
               <div>
-                <p className='text-sm text-foreground-500'>Priority</p>
+                <p className='text-foreground-500 text-sm'>Priority</p>
                 <div className='mt-1'>
-                  <Chip size='sm' variant='solid' color={taskPriorityColor(task.priority)} className='capitalize'>
+                  <Chip
+                    size='sm'
+                    variant='solid'
+                    color={taskPriorityColor(task.priority)}
+                    className='capitalize'
+                  >
                     {task.priority ?? 'none'}
                   </Chip>
                 </div>
               </div>
               <div>
-                <p className='text-sm text-foreground-500'>Deadline</p>
+                <p className='text-foreground-500 text-sm'>Deadline</p>
                 <p className='font-medium'>
                   {task.deadline ? (
                     <>
                       {new Date(task.deadline).toLocaleString()}
-                      <span className='text-foreground-500'> • {formatRelativeTime(task.deadline)}</span>
+                      <span className='text-foreground-500'>
+                        {' '}
+                        • {formatRelativeTime(task.deadline)}
+                      </span>
                     </>
                   ) : (
                     '—'
@@ -211,37 +225,52 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                 </p>
               </div>
               <div>
-                <p className='text-sm text-foreground-500'>Created</p>
+                <p className='text-foreground-500 text-sm'>Created</p>
                 <p className='font-medium'>
                   {new Date(task.created_at).toLocaleString()}
-                  <span className='text-foreground-500'> • {formatRelativeTime(task.created_at)}</span>
+                  <span className='text-foreground-500'>
+                    {' '}
+                    • {formatRelativeTime(task.created_at)}
+                  </span>
                 </p>
               </div>
               <div className='sm:col-span-2'>
-                <p className='text-sm text-foreground-500'>Description</p>
+                <p className='text-foreground-500 text-sm'>Description</p>
                 <p className='font-medium whitespace-pre-wrap'>{task.description ?? '—'}</p>
               </div>
             </div>
           ) : (
             <form id='task-edit-form' className='grid gap-4 sm:grid-cols-2' onSubmit={onSave}>
               {error && (
-                <div className='sm:col-span-2 text-danger text-sm border border-danger/40 rounded-md p-2 bg-danger/10'>
+                <div className='text-danger border-danger/40 bg-danger/10 rounded-md border p-2 text-sm sm:col-span-2'>
                   {error}
                 </div>
               )}
               {!error && saved && (
-                <div className='sm:col-span-2 text-success text-sm border border-success/40 rounded-md p-2 bg-success/10'>
+                <div className='text-success border-success/40 bg-success/10 rounded-md border p-2 text-sm sm:col-span-2'>
                   Saved
                 </div>
               )}
               <div className='sm:col-span-2'>
-                <Input ref={nameRef as any} label='Name' value={name} onChange={(e) => setName(e.target.value)} required isDisabled={saving} />
+                <Input
+                  ref={nameRef}
+                  label='Name'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  isDisabled={saving}
+                />
               </div>
               <div>
                 <DropdownSelect
                   label='Status'
                   value={status}
-                  onChange={(v) => setStatus(v as any)}
+                  onChange={(v) => {
+                    const opts = ['to-do', 'in-progress', 'done', 'overdue'] as const;
+                    const isStatus = (x: string): x is Tables<'Task'>['status'] =>
+                      (opts as readonly string[]).includes(x);
+                    if (isStatus(v)) setStatus(v);
+                  }}
                   options={[
                     { label: 'To-do', value: 'to-do' },
                     { label: 'In-progress', value: 'in-progress' },
@@ -256,7 +285,12 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                 <DropdownSelect
                   label='Priority'
                   value={priority ?? ''}
-                  onChange={(v) => setPriority((v || null) as any)}
+                  onChange={(v) => {
+                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const isPriority = (x: string): x is NonNullable<Tables<'Task'>['priority']> =>
+                      (opts as readonly string[]).includes(x);
+                    setPriority(v === '' ? null : isPriority(v) ? v : null);
+                  }}
                   options={[
                     { label: 'None', value: '' },
                     { label: 'Low', value: 'low' },
@@ -294,7 +328,9 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDeadline(toLocalInputFromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)))}
+                    onClick={() =>
+                      setDeadline(toLocalInputFromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)))
+                    }
                     isDisabled={saving}
                   >
                     +1 day
@@ -303,7 +339,13 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDeadline(toLocalInputFromDate(nextWeekday(deadline ? new Date(deadline) : new Date(), 1)))}
+                    onClick={() =>
+                      setDeadline(
+                        toLocalInputFromDate(
+                          nextWeekday(deadline ? new Date(deadline) : new Date(), 1),
+                        ),
+                      )
+                    }
                     isDisabled={saving}
                   >
                     Next Monday
@@ -312,7 +354,13 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                     variant='bordered'
                     size='sm'
                     radius='full'
-                    onClick={() => setDeadline(toLocalInputFromDate(nextWeekday(deadline ? new Date(deadline) : new Date(), 5)))}
+                    onClick={() =>
+                      setDeadline(
+                        toLocalInputFromDate(
+                          nextWeekday(deadline ? new Date(deadline) : new Date(), 5),
+                        ),
+                      )
+                    }
                     isDisabled={saving}
                   >
                     Next Friday
@@ -320,17 +368,22 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                 </div>
               </div>
               <div className='sm:col-span-2'>
-                <label className='text-xs text-foreground-600'>Description</label>
+                <label className='text-foreground-600 text-xs'>Description</label>
                 <textarea
-                  className='mt-1 w-full min-h-28 rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60'
+                  className='focus:ring-primary/60 mt-1 min-h-28 w-full rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2'
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={saving}
                   placeholder='Describe the task'
                 />
               </div>
-              <div className='sm:col-span-2 flex items-center gap-2'>
-                <Button type='submit' isDisabled={saving || !isDirty} isLoading={saving} radius='full'>
+              <div className='flex items-center gap-2 sm:col-span-2'>
+                <Button
+                  type='submit'
+                  isDisabled={saving || !isDirty}
+                  isLoading={saving}
+                  radius='full'
+                >
                   Save changes
                 </Button>
                 <Button

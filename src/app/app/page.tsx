@@ -37,7 +37,13 @@ export default async function AppPage() {
   let events: EventWithSpace[] = [];
 
   if (spaceIds.length > 0) {
-    const [{ data: tasksData }, { data: eventsData }] = await Promise.all([
+    const [
+      { data: tasksData },
+      { data: eventsData },
+    ]: [
+      { data: TaskWithSpace[] | null },
+      { data: EventWithSpace[] | null },
+    ] = await Promise.all([
       supabase
         .from('Task')
         .select('id,name,deadline,description,priority,status,space_id,created_at,Space(id,name)')
@@ -52,8 +58,8 @@ export default async function AppPage() {
         .limit(10),
     ]);
 
-    tasks = (tasksData as any) ?? [];
-    events = (eventsData as any) ?? [];
+    tasks = tasksData ?? [];
+    events = eventsData ?? [];
   }
 
   const displayName =

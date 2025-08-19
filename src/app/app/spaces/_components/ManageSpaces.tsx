@@ -33,7 +33,7 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
     }
     const { data, error: err } = await supabase
       .from('Space')
-      .insert({ name: n, user_id: user.id } as any)
+      .insert({ name: n, user_id: user.id })
       .select('id,name,created_at')
       .single<Space>();
     setSaving(false);

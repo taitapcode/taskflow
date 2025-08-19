@@ -35,11 +35,16 @@ export default function EventsBySpace({ spaces, events }: Props) {
   // Local filters (no URL sync)
   const [query, setQuery] = useState('');
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<
-    NonNullable<Tables<'Event'>['priority']> | 'all'
-  >('all');
+  type EventPriority = NonNullable<Tables<'Event'>['priority']>;
+  const eventPriorities = ['low', 'medium', 'high', 'imidiate'] as const;
+  const isEventPriority = (v: string): v is EventPriority =>
+    (eventPriorities as readonly string[]).includes(v);
+  const [priorityFilter, setPriorityFilter] = useState<EventPriority | 'all'>('all');
   const [hidePast, setHidePast] = useState(true);
-  const [sortBy, setSortBy] = useState<'date_asc' | 'date_desc' | 'created_desc' | 'created_asc'>('date_asc');
+  const sortOptions = ['date_asc', 'date_desc', 'created_desc', 'created_asc'] as const;
+  type SortBy = typeof sortOptions[number];
+  const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
+  const [sortBy, setSortBy] = useState<SortBy>('date_asc');
 
   // Removed loading spinner; keep instant filter updates.
 
@@ -123,7 +128,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
               <DropdownSelect
                 aria-label='Filter by priority'
                 value={priorityFilter}
-                onChange={(v) => setPriorityFilter(v as any)}
+                onChange={(v) => setPriorityFilter(isEventPriority(v) ? v : 'all')}
                 options={[
                   { label: 'All priority', value: 'all' },
                   { label: 'Low', value: 'low' },
@@ -149,7 +154,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
               <DropdownSelect
                 aria-label='Sort events'
                 value={sortBy}
-                onChange={(v) => setSortBy(v as any)}
+                onChange={(v) => setSortBy(isSortBy(v) ? v : 'date_asc')}
                 options={[
                   { label: 'Date: Soonest', value: 'date_asc' },
                   { label: 'Date: Latest', value: 'date_desc' },

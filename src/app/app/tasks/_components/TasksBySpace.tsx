@@ -1,9 +1,9 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
 import { useRouter } from 'next/navigation';
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name'>;
 type TaskWithSpace = Tables<'Task'> & { Space?: Space | null };
@@ -49,13 +49,29 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   // Local filters & sorting (no URL sync)
   const [query, setQuery] = useState('');
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
-  const [statusFilter, setStatusFilter] = useState<Tables<'Task'>['status'] | 'all'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<
-    NonNullable<Tables<'Task'>['priority']> | 'all'
-  >('all');
-  const [sortBy, setSortBy] = useState<
-    'created_desc' | 'created_asc' | 'deadline_asc' | 'deadline_desc' | 'priority_desc' | 'priority_asc'
-  >('created_desc');
+  type TaskStatus = Tables<'Task'>['status'];
+  const statusOptions = ['to-do', 'in-progress', 'done', 'overdue'] as const;
+  const isTaskStatus = (v: string): v is TaskStatus =>
+    (statusOptions as readonly string[]).includes(v);
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
+
+  type TaskPriority = NonNullable<Tables<'Task'>['priority']>;
+  const priorityOptions = ['low', 'medium', 'high', 'imidiate'] as const;
+  const isTaskPriority = (v: string): v is TaskPriority =>
+    (priorityOptions as readonly string[]).includes(v);
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | 'all'>('all');
+
+  const sortOptions = [
+    'created_desc',
+    'created_asc',
+    'deadline_asc',
+    'deadline_desc',
+    'priority_desc',
+    'priority_asc',
+  ] as const;
+  type SortBy = typeof sortOptions[number];
+  const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
+  const [sortBy, setSortBy] = useState<SortBy>('created_desc');
 
   // Derived filtered + sorted tasks
   const filtered = useMemo(() => {
@@ -87,9 +103,13 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
           return bd - ad;
         }
         case 'priority_desc':
-          return (priorityRank[b.priority ?? 'low'] ?? -1) - (priorityRank[a.priority ?? 'low'] ?? -1);
+          return (
+            (priorityRank[b.priority ?? 'low'] ?? -1) - (priorityRank[a.priority ?? 'low'] ?? -1)
+          );
         case 'priority_asc':
-          return (priorityRank[a.priority ?? 'low'] ?? -1) - (priorityRank[b.priority ?? 'low'] ?? -1);
+          return (
+            (priorityRank[a.priority ?? 'low'] ?? -1) - (priorityRank[b.priority ?? 'low'] ?? -1)
+          );
       }
     });
 
@@ -141,14 +161,17 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                 aria-label='Filter by space'
                 value={spaceFilter === 'all' ? 'all' : String(spaceFilter)}
                 onChange={(v) => setSpaceFilter(v === 'all' ? 'all' : Number(v))}
-                options={[{ label: 'All spaces', value: 'all' }, ...spaces.map((s) => ({ label: s.name, value: String(s.id) }))]}
+                options={[
+                  { label: 'All spaces', value: 'all' },
+                  ...spaces.map((s) => ({ label: s.name, value: String(s.id) })),
+                ]}
                 variant='flat'
                 size='sm'
               />
               <DropdownSelect
                 aria-label='Filter by status'
                 value={statusFilter}
-                onChange={(v) => setStatusFilter(v as any)}
+                onChange={(v) => setStatusFilter(isTaskStatus(v) ? v : 'all')}
                 options={[
                   { label: 'All status', value: 'all' },
                   { label: 'To-do', value: 'to-do' },
@@ -162,7 +185,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
               <DropdownSelect
                 aria-label='Filter by priority'
                 value={priorityFilter}
-                onChange={(v) => setPriorityFilter(v as any)}
+                onChange={(v) => setPriorityFilter(isTaskPriority(v) ? v : 'all')}
                 options={[
                   { label: 'All priority', value: 'all' },
                   { label: 'Low', value: 'low' },
@@ -175,11 +198,11 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
               />
             </div>
             <div className='flex items-center gap-3'>
-              <label className='text-sm text-foreground-600'>Sort</label>
+              <label className='text-foreground-600 text-sm'>Sort</label>
               <DropdownSelect
                 aria-label='Sort tasks'
                 value={sortBy}
-                onChange={(v) => setSortBy(v as any)}
+                onChange={(v) => setSortBy(isSortBy(v) ? v : 'created_desc')}
                 options={[
                   { label: 'Newest', value: 'created_desc' },
                   { label: 'Oldest', value: 'created_asc' },
@@ -219,7 +242,12 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
             header: 'Priority',
             className: 'w-[12%] min-w-[120px]',
             cell: (t) => (
-              <Chip size='sm' variant='solid' color={priorityColor(t.priority)} className='capitalize'>
+              <Chip
+                size='sm'
+                variant='solid'
+                color={priorityColor(t.priority)}
+                className='capitalize'
+              >
                 {t.priority ?? 'none'}
               </Chip>
             ),
@@ -245,14 +273,14 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                 <h2 className='text-lg font-medium'>{space.name}</h2>
               </div>
               {/* Mobile – stacked list */}
-              <ul className='md:hidden flex flex-col gap-2'>
+              <ul className='flex flex-col gap-2 md:hidden'>
                 {rows.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No tasks in this space</li>
                 )}
                 {rows.map((t) => (
                   <li
                     key={t.id}
-                    className='rounded-md border border-neutral-800 bg-content3/20 p-3 hover:bg-content3/40 transition-colors'
+                    className='bg-content3/20 hover:bg-content3/40 rounded-md border border-neutral-800 p-3 transition-colors'
                     role='button'
                     tabIndex={0}
                     onClick={() => router.push(`/app/tasks/${t.id}`)}
@@ -264,13 +292,23 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                     }}
                   >
                     <div className='flex items-start justify-between gap-2'>
-                      <p className='font-medium text-white truncate max-w-[70%]'>{t.name}</p>
-                      <Chip size='sm' variant='solid' color={statusColor(t.status)} className='capitalize shrink-0'>
+                      <p className='max-w-[70%] truncate font-medium text-white'>{t.name}</p>
+                      <Chip
+                        size='sm'
+                        variant='solid'
+                        color={statusColor(t.status)}
+                        className='shrink-0 capitalize'
+                      >
                         {t.status}
                       </Chip>
                     </div>
                     <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
-                      <Chip size='sm' variant='solid' color={priorityColor(t.priority)} className='capitalize'>
+                      <Chip
+                        size='sm'
+                        variant='solid'
+                        color={priorityColor(t.priority)}
+                        className='capitalize'
+                      >
                         {t.priority ?? 'none'}
                       </Chip>
                       <span className='text-foreground-500'>

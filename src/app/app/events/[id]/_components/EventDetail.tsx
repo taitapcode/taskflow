@@ -1,5 +1,5 @@
 "use client";
-import type { Tables } from '@/lib/supabase/database.types';
+import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
 import { Button, Chip, Input, DropdownSelect } from '@/app/_components/UI';
 import EventActions from './EventActions';
 import { useEffect, useRef, useState } from 'react';
@@ -83,12 +83,12 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
     }
     setSaving(true);
     const supabase = createClient();
-    const patch: Partial<Tables<'Event'>> = {};
-    if (name !== event.Name) (patch as any).Name = name.trim();
+    const patch: TablesUpdate<'Event'> = {};
+    if (name !== event.Name) patch.Name = name.trim();
     const dateISO = new Date(date).toISOString();
-    if (event.date !== dateISO) (patch as any).date = dateISO as any;
-    if ((priority ?? null) !== (event.priority ?? null)) (patch as any).priority = (priority ?? null) as any;
-    if ((description || null) !== (event.description || null)) (patch as any).description = description || null;
+    if (event.date !== dateISO) patch.date = dateISO;
+    if ((priority ?? null) !== (event.priority ?? null)) patch.priority = priority ?? null;
+    if ((description || null) !== (event.description || null)) patch.description = description || null;
     const { error: upErr } = await supabase.from('Event').update(patch).eq('id', event.id);
     setSaving(false);
     if (upErr) {
@@ -210,7 +210,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                 </div>
               )}
               <div className='sm:col-span-2'>
-                <Input ref={nameRef as any} label='Name' value={name} onChange={(e) => setName(e.target.value)} required isDisabled={saving} />
+                <Input ref={nameRef} label='Name' value={name} onChange={(e) => setName(e.target.value)} required isDisabled={saving} />
               </div>
               <div>
                 <Input
@@ -254,7 +254,14 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                 <DropdownSelect
                   label='Priority'
                   value={priority ?? ''}
-                  onChange={(v) => setPriority((v || null) as any)}
+                  onChange={(v) => {
+                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const isPriority = (
+                      x: string,
+                    ): x is NonNullable<Tables<'Event'>['priority']> =>
+                      (opts as readonly string[]).includes(x);
+                    setPriority(v === '' ? null : isPriority(v) ? v : null);
+                  }}
                   options={[
                     { label: 'None', value: '' },
                     { label: 'Low', value: 'low' },
