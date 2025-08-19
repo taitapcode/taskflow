@@ -2,9 +2,10 @@
 import createClient from '@/lib/supabase/browser';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '../_store/user';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AvatarUploader from '../_components/AvatarUploader';
-import { Card, CardBody, Input, Button } from '@/app/_components/UI';
+import { Card, CardBody, Input, Button, Chip } from '@/app/_components/UI';
+import { Loader2, Mail, User as UserIcon, Link as LinkIcon } from 'lucide-react';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -13,6 +14,13 @@ export default function AccountPage() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<'success' | 'danger' | null>(null);
+
+  const isDirty = useMemo(() => {
+    return (
+      (user?.displayName ?? '') !== displayName || (user?.avatarUrl ?? '') !== avatarUrl
+    );
+  }, [displayName, avatarUrl, user?.displayName, user?.avatarUrl]);
 
   function extractAvatarPath(publicUrl: string | null | undefined) {
     try {
@@ -43,9 +51,11 @@ export default function AccountPage() {
       data: { display_name: displayName, avatar_url: avatarUrl || null },
     });
     if (error) {
+      setMessageType('danger');
       setMessage(`Failed to save: ${error.message}`);
     } else if (data.user) {
       updateUser(data.user);
+      setMessageType('success');
       setMessage('Profile saved.');
       if (oldPath && oldPath !== newPath) {
         const { error: removeErr } = await supabase.storage.from('avatar').remove([oldPath]);
@@ -64,8 +74,8 @@ export default function AccountPage() {
   }
 
   return (
-    <div className='flex min-h-full min-w-full items-start justify-center'>
-      <div className='flex w-full max-w-2xl flex-col gap-6'>
+    <div className='flex min-h-full min-w-full justify-center'>
+      <div className='flex w-full max-w-3xl flex-col gap-6'>
         <header>
           <h1 className='text-2xl font-semibold'>Account</h1>
           <p className='text-foreground-500 mt-1 text-sm'>Manage your profile and session</p>
@@ -74,47 +84,72 @@ export default function AccountPage() {
         <Card shadow='sm' className='bg-content2 border border-neutral-700'>
           <CardBody className='p-4'>
             <div className='grid gap-4 sm:grid-cols-2'>
-            <div className='sm:col-span-2'>
-              <AvatarUploader
-                onUploaded={(url) => {
-                  setAvatarUrl(url);
-                  setMessage('Avatar updated.');
-                }}
-              />
+              <div className='sm:col-span-2'>
+                <AvatarUploader
+                  onUploaded={(url) => {
+                    setAvatarUrl(url);
+                    setMessageType('success');
+                    setMessage('Avatar updated.');
+                  }}
+                />
+              </div>
+              <div>
+                <Input
+                  label='Email'
+                  value={user?.email ?? ''}
+                  isDisabled
+                  variant='flat'
+                  startContent={<Mail size={18} />}
+                />
+              </div>
+              <div>
+                <Input
+                  label='Display name'
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder='Your name'
+                  variant='flat'
+                  startContent={<UserIcon size={18} />}
+                />
+              </div>
+              <div className='sm:col-span-2'>
+                <Input
+                  label='Avatar URL'
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  placeholder='https://…'
+                  variant='flat'
+                  startContent={<LinkIcon size={18} />}
+                />
+              </div>
             </div>
-            <div>
-              <Input label='Email' value={user?.email ?? ''} isDisabled variant='bordered' />
-            </div>
-            <div>
-              <Input
-                label='Display Name'
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder='Your name'
-                variant='bordered'
-              />
-            </div>
-            <div className='sm:col-span-2'>
-              <Input
-                label='Avatar URL'
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder='https://…'
-                variant='bordered'
-              />
-            </div>
-            </div>
-            {message && <p className='text-foreground-500 mt-3 text-xs'>{message}</p>}
-            <div className='mt-4 flex gap-2'>
-              <Button onPress={saveProfile} isDisabled={saving} color='primary' className='text-background'>
-                {saving ? 'Saving…' : 'Save Profile'}
+
+            {message && (
+              <div className='mt-3'>
+                <Chip size='sm' variant='flat' color={messageType === 'danger' ? 'danger' : 'success'}>
+                  {message}
+                </Chip>
+              </div>
+            )}
+
+            <div className='mt-4 flex flex-wrap gap-2'>
+              <Button
+                onPress={saveProfile}
+                isDisabled={saving || !isDirty}
+                color='primary'
+                radius='full'
+              >
+                {saving ? <Loader2 className='animate-spin' size={18} /> : null}
+                {saving ? 'Saving…' : 'Save profile'}
               </Button>
-              <Button variant='bordered' onPress={handleLogOut}>
+              <Button variant='bordered' onPress={handleLogOut} radius='full'>
                 Logout
               </Button>
             </div>
           </CardBody>
         </Card>
+
+        {null}
       </div>
     </div>
   );
