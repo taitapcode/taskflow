@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, useId } from 'react';
 import cn from '@/lib/cn';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -116,9 +116,15 @@ export default function DropdownSelect({
     }
   }, [open]);
 
+  const labelId = useId();
+
   return (
-    <label className={cn('flex w-full flex-col gap-1', className)}>
-      {label && <span className='text-foreground-600 text-xs'>{label}</span>}
+    <div className={cn('flex w-full flex-col gap-1', className)}>
+      {label && (
+        <span id={labelId} className='text-foreground-600 text-xs'>
+          {label}
+        </span>
+      )}
       <div className='relative inline-block w-full'>
         <button
           type='button'
@@ -126,6 +132,7 @@ export default function DropdownSelect({
           disabled={isDisabled}
           aria-haspopup='listbox'
           aria-expanded={open}
+          aria-labelledby={label ? labelId : undefined}
           onClick={() => !isDisabled && setOpen((o) => !o)}
           onKeyDown={onKeyDownBtn}
           className={cn(
@@ -174,6 +181,6 @@ export default function DropdownSelect({
           </ul>
         )}
       </div>
-    </label>
+    </div>
   );
 }
