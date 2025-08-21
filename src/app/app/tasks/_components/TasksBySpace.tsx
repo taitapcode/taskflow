@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
@@ -107,9 +107,15 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   // Simple client-side pagination per space to cap DOM size
   const DEFAULT_VISIBLE = 50;
   const [visibleBySpace, setVisibleBySpace] = useState<Record<number, number>>({});
-  const getVisible = useCallback((spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE, [visibleBySpace]);
+  const getVisible = useCallback(
+    (spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE,
+    [visibleBySpace],
+  );
   const showMore = useCallback((spaceId: number) => {
-    setVisibleBySpace((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE }));
+    setVisibleBySpace((prev) => ({
+      ...prev,
+      [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE,
+    }));
   }, []);
 
   // Stable column definitions
@@ -136,7 +142,12 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
         header: 'Priority',
         className: 'w-[12%] min-w-[120px]',
         cell: (t) => (
-          <Chip size='sm' variant='solid' color={taskPriorityColor(t.priority)} className='capitalize'>
+          <Chip
+            size='sm'
+            variant='solid'
+            color={taskPriorityColor(t.priority)}
+            className='capitalize'
+          >
             {t.priority ?? 'none'}
           </Chip>
         ),
@@ -175,7 +186,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   return (
     <div className='flex flex-col gap-6'>
       {/* Filters toolbar */}
-      <Card shadow='sm' className='bg-content2 border border-neutral-700'>
+      <Card shadow='sm' className='bg-content2 sticky top-0 z-20 border border-neutral-700'>
         <CardBody className='p-4'>
           <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
             <div className='flex flex-1 items-center gap-3'>
@@ -247,6 +258,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
           </div>
         </CardBody>
       </Card>
+
       {nonEmptySpaces.map((space) => {
         const rows = tasksBySpace.get(space.id) ?? [];
         const visible = getVisible(space.id);

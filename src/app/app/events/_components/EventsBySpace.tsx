@@ -148,7 +148,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
   return (
     <div className='flex flex-col gap-6'>
       {/* Filters toolbar */}
-      <Card shadow='sm' className='bg-content2 border border-neutral-700'>
+      <Card shadow='sm' className='bg-content2 sticky top-0 z-20 border border-neutral-700'>
         <CardBody className='p-4'>
           <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
             <div className='flex flex-1 items-center gap-3'>
