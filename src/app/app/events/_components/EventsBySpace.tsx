@@ -2,6 +2,7 @@
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
+import { formatDate } from '@/lib/date';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -183,7 +184,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
             key: 'date',
             header: 'Date',
             className: 'w-[18%] min-w-[140px]',
-            cell: (e) => new Date(e.date).toLocaleDateString(),
+            cell: (e) => formatDate(e.date),
           },
           {
             key: 'priority',
@@ -204,7 +205,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
             key: 'created',
             header: 'Created',
             className: 'w-[18%] min-w-[140px]',
-            cell: (e) => new Date(e.created_at).toLocaleDateString(),
+            cell: (e) => formatDate(e.created_at),
           },
         ];
 
@@ -246,7 +247,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
                     </div>
                     <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
                       <span className='text-foreground-500'>
-                        {new Date(e.date).toLocaleDateString()}
+                        {formatDate(e.date)}
                       </span>
                     </div>
                   </li>

@@ -2,6 +2,7 @@
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
+import { formatDate } from '@/lib/date';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -256,13 +257,13 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
             key: 'deadline',
             header: 'Deadline',
             className: 'w-[18%] min-w-[140px]',
-            cell: (t) => (t.deadline ? new Date(t.deadline).toLocaleDateString() : '—'),
+            cell: (t) => (t.deadline ? formatDate(t.deadline) : '—'),
           },
           {
             key: 'created',
             header: 'Created',
             className: 'w-[18%] min-w-[140px]',
-            cell: (t) => new Date(t.created_at).toLocaleDateString(),
+            cell: (t) => formatDate(t.created_at),
           },
         ];
 
@@ -312,7 +313,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                         {t.priority ?? 'none'}
                       </Chip>
                       <span className='text-foreground-500'>
-                        {t.deadline ? new Date(t.deadline).toLocaleDateString() : 'No deadline'}
+                        {t.deadline ? formatDate(t.deadline) : 'No deadline'}
                       </span>
                     </div>
                   </li>
