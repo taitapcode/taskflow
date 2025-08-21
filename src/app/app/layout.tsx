@@ -11,8 +11,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     async function fetchUser() {
       const supabase = createClient();
       const { data, error } = await supabase.auth.getSession();
-      if (error) console.log(error);
-      else if (data.session?.user) updateUser(data.session.user);
+      if (!error && data.session?.user) updateUser(data.session.user);
     }
 
     fetchUser();
