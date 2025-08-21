@@ -149,7 +149,7 @@ export default function CreateTaskModal({
 
               <Input
                 label='Deadline'
-                type='datetime-local'
+                type='date'
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
               />
