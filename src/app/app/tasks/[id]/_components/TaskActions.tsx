@@ -1,10 +1,11 @@
 'use client';
 import { Button } from '@/app/_components/UI';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 
 export default function TaskActions() {
   const pathname = usePathname();
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
 
   const link = useMemo(() => {
@@ -20,9 +21,14 @@ export default function TaskActions() {
     } catch {}
   }, [link]);
 
+  const goBack = useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.length > 1) router.back();
+    else router.push('/app/tasks');
+  }, [router]);
+
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <Button href='/app/tasks' variant='bordered' size='sm' radius='full'>
+      <Button onClick={goBack} variant='bordered' size='sm' radius='full'>
         Back
       </Button>
       <Button onClick={copyLink} variant='bordered' size='sm' radius='full'>
