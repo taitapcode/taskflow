@@ -42,6 +42,17 @@ body {
   min-height: 100%;
 }
 
+/* Utility: hide scrollbars but keep scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none; /* Safari and Chrome */
+}
+
 /* Empty state animated backdrop */
 .empty-orb {
   position: absolute;
