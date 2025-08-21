@@ -5,6 +5,7 @@ import RecentTasks from './_components/Dashboard/RecentTasks';
 import UpcomingEvents from './_components/Dashboard/UpcomingEvents';
 import { Card, CardBody, Button, Chip } from '@/app/_components/UI';
 import { FolderPlus } from 'lucide-react';
+import { updateOverdueTasksForSpaces } from '@/lib/overdue';
 
 export default async function AppPage() {
   const supabase = await createClient();
@@ -37,6 +38,8 @@ export default async function AppPage() {
   let events: EventWithSpace[] = [];
 
   if (spaceIds.length > 0) {
+    // Auto-mark overdue tasks before fetching
+    await updateOverdueTasksForSpaces(supabase, spaceIds);
     const [{ data: tasksData }, { data: eventsData }]: [
       { data: TaskWithSpace[] | null },
       { data: EventWithSpace[] | null },

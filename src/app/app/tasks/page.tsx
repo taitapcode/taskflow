@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import TasksBySpace from './_components/TasksBySpace';
+import { updateOverdueTasksForSpaces } from '@/lib/overdue';
 
 type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
@@ -23,6 +24,8 @@ export default async function TasksPage() {
 
   let tasks: TaskWithSpace[] = [];
   if (spaceIds.length > 0) {
+    // Auto-mark overdue tasks before fetching
+    await updateOverdueTasksForSpaces(supabase, spaceIds);
     const { data: tasksData, error: tasksError } = await supabase
       .from('Task')
       .select('id,name,deadline,description,priority,status,space_id,created_at,Space(id,name)')

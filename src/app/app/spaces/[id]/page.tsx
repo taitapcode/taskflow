@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import SpaceDetail from './_components/SpaceDetail';
+import { updateOverdueTasksForSpaces } from '@/lib/overdue';
 
 type Space = Tables<'Space'>;
 type Task = Pick<Tables<'Task'>, 'id' | 'name' | 'status' | 'priority' | 'deadline' | 'created_at'>;
@@ -14,6 +15,9 @@ export default async function SpacePage({ params }: Props) {
   if (Number.isNaN(id)) return <main>Invalid space id</main>;
 
   const supabase = await createClient();
+
+  // First, mark overdue tasks for this space
+  await updateOverdueTasksForSpaces(supabase, [id]);
 
   const [{ data: space, error: spaceError }, { data: tasks }, { data: events }] = await Promise.all([
     supabase
@@ -44,4 +48,3 @@ export default async function SpacePage({ params }: Props) {
     </main>
   );
 }
-

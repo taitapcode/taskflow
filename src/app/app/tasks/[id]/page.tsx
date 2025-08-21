@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import TaskDetail from './_components/TaskDetail';
+import { updateOverdueTaskById } from '@/lib/overdue';
 
 type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
@@ -12,6 +13,8 @@ export default async function TaskDetailPage({ params }: Props) {
   if (Number.isNaN(id)) return <main>Invalid task id</main>;
 
   const supabase = await createClient();
+  // Auto-mark as overdue if needed before fetching
+  await updateOverdueTaskById(supabase, id);
   const { data, error } = await supabase
     .from('Task')
     .select('id,name,description,deadline,priority,status,created_at,space_id,Space(id,name)')
