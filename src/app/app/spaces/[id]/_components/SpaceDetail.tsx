@@ -1,14 +1,15 @@
 'use client';
-import type { Tables } from '@/lib/supabase/database.types';
-import { Button, Card, CardBody, Chip, DropdownSelect } from '@/app/_components/UI';
+import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
+import { Button, Card, CardBody, Chip, DropdownSelect, Input } from '@/app/_components/UI';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { formatDate } from '@/lib/date';
 import { eventPriorityColor, taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import Link from 'next/link';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CreateTaskModal from './CreateTaskModal';
 import CreateEventModal from './CreateEventModal';
+import createClient from '@/lib/supabase/browser';
 
 type Space = Tables<'Space'>;
 type Task = Pick<Tables<'Task'>, 'id' | 'name' | 'status' | 'priority' | 'deadline' | 'created_at'>;
@@ -30,6 +31,48 @@ export default function SpaceDetail({
     if (typeof window !== 'undefined' && window.history.length > 1) router.back();
     else router.push('/app/spaces');
   }, [router]);
+
+  // Edit Space (name/description)
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [spaceName, setSpaceName] = useState(space.name);
+  const [spaceDescription, setSpaceDescription] = useState(space.description ?? '');
+  const initial = useRef({ name: space.name, description: space.description ?? '' });
+  const isDirty =
+    spaceName.trim() !== initial.current.name ||
+    (spaceDescription || '') !== (initial.current.description || '');
+
+  async function saveSpace(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    const n = spaceName.trim();
+    if (!n) {
+      setError('Space name is required');
+      return;
+    }
+    if (!isDirty) {
+      setEditing(false);
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    const patch: TablesUpdate<'Space'> = {};
+    if (n !== space.name) patch.name = n;
+    if ((spaceDescription || null) !== (space.description || null))
+      patch.description = spaceDescription || null;
+    const { error: upErr } = await supabase.from('Space').update(patch).eq('id', space.id);
+    setSaving(false);
+    if (upErr) {
+      setError(upErr.message);
+      return;
+    }
+    setEditing(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1500);
+    router.refresh();
+  }
 
   // Tasks are always sorted by status (primary), with a secondary sort chosen by user
   const taskSortOptions = [
@@ -122,22 +165,87 @@ export default function SpaceDetail({
   return (
     <>
       <header className='flex items-start justify-between gap-4'>
-        <div>
-          <h1 className='text-2xl font-semibold'>{space.name}</h1>
-          <p className='text-foreground-500 mt-1 text-sm'>
-            Created {formatDate(space.created_at)}
-            <span className='text-foreground-500'> • {formatRelativeTime(space.created_at)}</span>
-          </p>
-          {space.description && (
-            <p className='text-foreground-500 mt-2 max-w-prose whitespace-pre-wrap text-sm'>
-              {space.description}
-            </p>
+        <div className='flex-1'>
+          {!editing ? (
+            <>
+              <h1 className='text-2xl font-semibold'>{space.name}</h1>
+              <p className='text-foreground-500 mt-1 text-sm'>
+                Created {formatDate(space.created_at)}
+                <span className='text-foreground-500'> • {formatRelativeTime(space.created_at)}</span>
+              </p>
+              {space.description && (
+                <p className='text-foreground-500 mt-2 max-w-prose whitespace-pre-wrap text-sm'>
+                  {space.description}
+                </p>
+              )}
+            </>
+          ) : (
+            <form className='flex flex-col gap-3' onSubmit={saveSpace}>
+              {error && (
+                <div className='text-danger border-danger/40 bg-danger/10 rounded-md border p-2 text-sm'>
+                  {error}
+                </div>
+              )}
+              {!error && saved && (
+                <div className='text-success border-success/40 bg-success/10 rounded-md border p-2 text-sm'>
+                  Saved
+                </div>
+              )}
+              <div className='max-w-xl'>
+                <Input
+                  label='Space name'
+                  value={spaceName}
+                  onChange={(e) => setSpaceName(e.target.value)}
+                  isDisabled={saving}
+                  required
+                />
+              </div>
+              <div className='max-w-2xl'>
+                <label className='text-foreground-600 text-xs'>Description</label>
+                <textarea
+                  className='focus:ring-primary/60 mt-1 min-h-28 w-full rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2'
+                  value={spaceDescription}
+                  onChange={(e) => setSpaceDescription(e.target.value)}
+                  disabled={saving}
+                  placeholder='Describe this space'
+                />
+              </div>
+              <div className='flex items-center gap-2'>
+                <Button type='submit' isDisabled={saving || !spaceName.trim()} isLoading={saving} radius='full'>
+                  Save
+                </Button>
+                <Button
+                  type='button'
+                  variant='bordered'
+                  radius='full'
+                  onClick={() => {
+                    setSpaceName(initial.current.name);
+                    setSpaceDescription(initial.current.description);
+                    setEditing(false);
+                  }}
+                  isDisabled={saving}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
           )}
         </div>
         <div className='flex flex-wrap items-center gap-2'>
-          <Button onClick={goBack} variant='bordered' size='sm' radius='full'>
-            Back to Spaces
-          </Button>
+          {!editing ? (
+            <>
+              <Button onClick={() => setEditing(true)} variant='bordered' size='sm' radius='full'>
+                Edit Space
+              </Button>
+              <Button onClick={goBack} variant='bordered' size='sm' radius='full'>
+                Back to Spaces
+              </Button>
+            </>
+          ) : (
+            <Button onClick={goBack} variant='bordered' size='sm' radius='full'>
+              Back to Spaces
+            </Button>
+          )}
         </div>
       </header>
 
