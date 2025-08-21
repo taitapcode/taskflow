@@ -5,6 +5,7 @@ import EventActions from './EventActions';
 import { useEffect, useRef, useState } from 'react';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { eventPriorityColor } from '@/lib/uiColors';
+import { formatDate } from '@/lib/date';
 import createClient from '@/lib/supabase/browser';
 import { useRouter } from 'next/navigation';
 
@@ -167,7 +168,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
               <div>
                 <p className='text-foreground-500 text-sm'>Date</p>
                 <p className='font-medium'>
-                  {new Date(event.date).toLocaleString()}
+                  {formatDate(event.date)}
                   <span className='text-foreground-500'> • {formatRelativeTime(event.date)}</span>
                 </p>
               </div>
@@ -187,7 +188,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
               <div>
                 <p className='text-foreground-500 text-sm'>Created</p>
                 <p className='font-medium'>
-                  {new Date(event.created_at).toLocaleString()}
+                  {formatDate(event.created_at)}
                   <span className='text-foreground-500'>
                     {' '}
                     • {formatRelativeTime(event.created_at)}

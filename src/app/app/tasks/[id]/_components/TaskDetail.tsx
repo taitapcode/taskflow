@@ -5,6 +5,7 @@ import TaskActions from './TaskActions';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
+import { formatDate } from '@/lib/date';
 import createClient from '@/lib/supabase/browser';
 import { useRouter } from 'next/navigation';
 
@@ -205,7 +206,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                 <p className='font-medium'>
                   {task.deadline ? (
                     <>
-                      {new Date(task.deadline).toLocaleString()}
+                      {formatDate(task.deadline)}
                       <span className='text-foreground-500'>
                         {' '}
                         • {formatRelativeTime(task.deadline)}
@@ -219,7 +220,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
               <div>
                 <p className='text-foreground-500 text-sm'>Created</p>
                 <p className='font-medium'>
-                  {new Date(task.created_at).toLocaleString()}
+                  {formatDate(task.created_at)}
                   <span className='text-foreground-500'>
                     {' '}
                     • {formatRelativeTime(task.created_at)}
