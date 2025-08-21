@@ -58,22 +58,15 @@ export default function CreateTaskModal({
     setSaving(true);
     setError(null);
     const supabase = createClient();
-    const payload: Partial<Tables<'Task'>> & {
-      name: string;
-      space_id: number;
-      status: TaskStatus;
-    } = {
+    const payload: import('@/lib/supabase/database.types').TablesInsert<'Task'> = {
       name: name.trim(),
       space_id: spaceId,
       status,
+      ...(priority ? { priority } : {}),
+      ...(deadline ? { deadline: new Date(deadline).toISOString() } : {}),
+      ...(description.trim() ? { description: description.trim() } : {}),
     };
-    if (priority) payload.priority = priority;
-    if (deadline) payload.deadline = new Date(deadline).toISOString();
-    if (description.trim()) payload.description = description.trim();
-    const { error: err } = await supabase
-      .from('Task')
-      .insert(payload as any)
-      .single();
+    const { error: err } = await supabase.from('Task').insert(payload).single();
     setSaving(false);
     if (err) {
       setError(err.message);

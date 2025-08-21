@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useUserStore } from '../../_store/user';
 import { useSidebarStore } from '../../_store/sidebar';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import Avatar from '@/app/_components/UI/Avatar';
 
 export default function User() {
+  const prefersReducedMotion = useReducedMotion();
   const { user } = useUserStore();
   const { open } = useSidebarStore();
   const [isHovered, setIsHovered] = useState(false);
@@ -21,10 +22,7 @@ export default function User() {
         <Avatar src={user?.avatarUrl ?? undefined} size={36} />
       </div>
       <motion.span
-        animate={{
-          opacity: open ? 1 : 0,
-          x: open ? (isHovered ? 10 : 0) : 20,
-        }}
+        animate={prefersReducedMotion ? undefined : { opacity: open ? 1 : 0, x: open ? (isHovered ? 10 : 0) : 20 }}
         className='w-60 overflow-hidden text-lg whitespace-nowrap'
       >
         {user?.displayName ?? 'Account'}

@@ -1,10 +1,11 @@
-'use client';
+"use client";
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
 import { formatDate } from '@/lib/date';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useDeferredValue, useCallback } from 'react';
+import { taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name'>;
 type TaskWithSpace = Tables<'Task'> & { Space?: Space | null };
@@ -14,41 +15,14 @@ type Props = {
   tasks: TaskWithSpace[];
 };
 
-function statusColor(status: Tables<'Task'>['status']) {
-  switch (status) {
-    case 'to-do':
-      return 'default' as const;
-    case 'in-progress':
-      return 'warning' as const;
-    case 'done':
-      return 'success' as const;
-    case 'overdue':
-      return 'danger' as const;
-    default:
-      return 'default' as const;
-  }
-}
-
-function priorityColor(priority: Tables<'Task'>['priority'] | null | undefined) {
-  switch (priority) {
-    case 'low':
-      return 'default' as const;
-    case 'medium':
-      return 'primary' as const;
-    case 'high':
-      return 'warning' as const;
-    case 'imidiate':
-      return 'danger' as const;
-    default:
-      return 'default' as const;
-  }
-}
+// Use centralized color helpers to avoid duplication and keep consistency
 
 export default function TasksBySpace({ spaces, tasks }: Props) {
   const router = useRouter();
 
   // Local filters & sorting (no URL sync)
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
   type TaskStatus = Tables<'Task'>['status'];
   const statusOptions = ['to-do', 'in-progress', 'done', 'overdue'] as const;
@@ -76,7 +50,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
 
   // Derived filtered + sorted tasks
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
     let rows = tasks.filter((t) => {
       if (spaceFilter !== 'all' && t.space_id !== spaceFilter) return false;
@@ -115,7 +89,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
     });
 
     return rows;
-  }, [tasks, query, spaceFilter, statusFilter, priorityFilter, sortBy]);
+  }, [tasks, deferredQuery, spaceFilter, statusFilter, priorityFilter, sortBy]);
 
   // Group by space after filtering
   const tasksBySpace = useMemo(() => {
@@ -129,6 +103,59 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   }, [spaces, filtered]);
 
   const nonEmptySpaces = spaces.filter((s) => (tasksBySpace.get(s.id)?.length ?? 0) > 0);
+
+  // Simple client-side pagination per space to cap DOM size
+  const DEFAULT_VISIBLE = 50;
+  const [visibleBySpace, setVisibleBySpace] = useState<Record<number, number>>({});
+  const getVisible = useCallback((spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE, [visibleBySpace]);
+  const showMore = useCallback((spaceId: number) => {
+    setVisibleBySpace((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE }));
+  }, []);
+
+  // Stable column definitions
+  const columns: Column<TaskWithSpace>[] = useMemo(
+    () => [
+      {
+        key: 'name',
+        header: 'Name',
+        className: 'w-[40%] min-w-[220px] max-w-[420px] truncate',
+        cell: (t) => <span className='truncate text-white'>{t.name}</span>,
+      },
+      {
+        key: 'status',
+        header: 'Status',
+        className: 'w-[12%] min-w-[120px]',
+        cell: (t) => (
+          <Chip size='sm' variant='solid' color={taskStatusColor(t.status)} className='capitalize'>
+            {t.status}
+          </Chip>
+        ),
+      },
+      {
+        key: 'priority',
+        header: 'Priority',
+        className: 'w-[12%] min-w-[120px]',
+        cell: (t) => (
+          <Chip size='sm' variant='solid' color={taskPriorityColor(t.priority)} className='capitalize'>
+            {t.priority ?? 'none'}
+          </Chip>
+        ),
+      },
+      {
+        key: 'deadline',
+        header: 'Deadline',
+        className: 'w-[18%] min-w-[140px]',
+        cell: (t) => (t.deadline ? formatDate(t.deadline) : '—'),
+      },
+      {
+        key: 'created',
+        header: 'Created',
+        className: 'w-[18%] min-w-[140px]',
+        cell: (t) => formatDate(t.created_at),
+      },
+    ],
+    [],
+  );
   const hasAny = tasks.length > 0;
 
   if (!hasAny) {
@@ -222,51 +249,8 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
       </Card>
       {nonEmptySpaces.map((space) => {
         const rows = tasksBySpace.get(space.id) ?? [];
-        const columns: Column<TaskWithSpace>[] = [
-          {
-            key: 'name',
-            header: 'Name',
-            className: 'w-[40%] min-w-[220px] max-w-[420px] truncate',
-            cell: (t) => <span className='truncate text-white'>{t.name}</span>,
-          },
-          {
-            key: 'status',
-            header: 'Status',
-            className: 'w-[12%] min-w-[120px]',
-            cell: (t) => (
-              <Chip size='sm' variant='solid' color={statusColor(t.status)} className='capitalize'>
-                {t.status}
-              </Chip>
-            ),
-          },
-          {
-            key: 'priority',
-            header: 'Priority',
-            className: 'w-[12%] min-w-[120px]',
-            cell: (t) => (
-              <Chip
-                size='sm'
-                variant='solid'
-                color={priorityColor(t.priority)}
-                className='capitalize'
-              >
-                {t.priority ?? 'none'}
-              </Chip>
-            ),
-          },
-          {
-            key: 'deadline',
-            header: 'Deadline',
-            className: 'w-[18%] min-w-[140px]',
-            cell: (t) => (t.deadline ? formatDate(t.deadline) : '—'),
-          },
-          {
-            key: 'created',
-            header: 'Created',
-            className: 'w-[18%] min-w-[140px]',
-            cell: (t) => formatDate(t.created_at),
-          },
-        ];
+        const visible = getVisible(space.id);
+        const rowsSlice = rows.slice(0, visible);
 
         return (
           <Card key={space.id} shadow='sm' className='bg-content2 border border-neutral-700'>
@@ -276,10 +260,10 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
               </div>
               {/* Mobile – stacked list */}
               <ul className='flex flex-col gap-2 md:hidden'>
-                {rows.length === 0 && (
+                {rowsSlice.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No tasks in this space</li>
                 )}
-                {rows.map((t) => (
+                {rowsSlice.map((t) => (
                   <li
                     key={t.id}
                     className='bg-content3/20 hover:bg-content3/40 rounded-md border border-neutral-800 p-3 transition-colors'
@@ -298,7 +282,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                       <Chip
                         size='sm'
                         variant='solid'
-                        color={statusColor(t.status)}
+                        color={taskStatusColor(t.status)}
                         className='shrink-0 capitalize'
                       >
                         {t.status}
@@ -308,7 +292,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                       <Chip
                         size='sm'
                         variant='solid'
-                        color={priorityColor(t.priority)}
+                        color={taskPriorityColor(t.priority)}
                         className='capitalize'
                       >
                         {t.priority ?? 'none'}
@@ -325,12 +309,22 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
               <div className='hidden md:block'>
                 <DataTable
                   ariaLabel={`Tasks in ${space.name}`}
-                  data={rows}
+                  data={rowsSlice}
                   columns={columns}
                   getKey={(t) => t.id}
                   emptyContent='No tasks in this space'
                   onRowClick={(t) => router.push(`/app/tasks/${t.id}`)}
                 />
+                {rows.length > rowsSlice.length && (
+                  <div className='mt-2 flex justify-center'>
+                    <button
+                      className='text-primary text-sm underline-offset-2 hover:underline'
+                      onClick={() => showMore(space.id)}
+                    >
+                      Load more ({rows.length - rowsSlice.length} more)
+                    </button>
+                  </div>
+                )}
               </div>
             </CardBody>
           </Card>

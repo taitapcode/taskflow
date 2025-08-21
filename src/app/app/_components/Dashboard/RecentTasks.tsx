@@ -2,41 +2,12 @@
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip } from '@/app/_components/UI';
 import { colorForLabel } from '@/lib/color';
+import { taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import DataTable, { type Column } from '../DataTable';
 import { useRouter } from 'next/navigation';
 
 type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 type Props = { tasks: TaskWithSpace[] };
-
-function statusColor(status: Tables<'Task'>['status']) {
-  switch (status) {
-    case 'to-do':
-      return 'default' as const;
-    case 'in-progress':
-      return 'warning' as const;
-    case 'done':
-      return 'success' as const;
-    case 'overdue':
-      return 'danger' as const;
-    default:
-      return 'default' as const;
-  }
-}
-
-function priorityColor(priority: Tables<'Task'>['priority'] | null | undefined) {
-  switch (priority) {
-    case 'low':
-      return 'default' as const;
-    case 'medium':
-      return 'primary' as const;
-    case 'high':
-      return 'warning' as const;
-    case 'imidiate':
-      return 'danger' as const;
-    default:
-      return 'default' as const;
-  }
-}
 
 export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHref?: string }) {
   const router = useRouter();
@@ -69,7 +40,7 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
       header: 'Status',
       className: 'w-[14%] min-w-[120px]',
       cell: (t) => (
-        <Chip size='sm' variant='solid' color={statusColor(t.status)} className='capitalize'>
+        <Chip size='sm' variant='solid' color={taskStatusColor(t.status)} className='capitalize'>
           {t.status}
         </Chip>
       ),
@@ -79,7 +50,7 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
       header: 'Priority',
       className: 'w-[14%] min-w-[120px]',
       cell: (t) => (
-        <Chip size='sm' variant='solid' color={priorityColor(t.priority)} className='capitalize'>
+        <Chip size='sm' variant='solid' color={taskPriorityColor(t.priority)} className='capitalize'>
           {t.priority ?? 'none'}
         </Chip>
       ),
@@ -127,7 +98,7 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
                 <Chip
                   size='sm'
                   variant='solid'
-                  color={statusColor(t.status)}
+                  color={taskStatusColor(t.status)}
                   className='shrink-0 capitalize'
                 >
                   {t.status}
@@ -150,7 +121,7 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
                 <Chip
                   size='sm'
                   variant='solid'
-                  color={priorityColor(t.priority)}
+                  color={taskPriorityColor(t.priority)}
                   className='capitalize'
                 >
                   {t.priority ?? 'none'}

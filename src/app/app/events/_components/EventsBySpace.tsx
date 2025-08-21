@@ -1,10 +1,11 @@
-'use client';
+"use client";
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
 import { formatDate } from '@/lib/date';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useDeferredValue, useCallback } from 'react';
+import { eventPriorityColor } from '@/lib/uiColors';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name'>;
 type EventWithSpace = Tables<'Event'> & { Space?: Space | null };
@@ -14,26 +15,14 @@ type Props = {
   events: EventWithSpace[];
 };
 
-function priorityColor(priority: Tables<'Event'>['priority'] | null | undefined) {
-  switch (priority) {
-    case 'low':
-      return 'default' as const;
-    case 'medium':
-      return 'primary' as const;
-    case 'high':
-      return 'warning' as const;
-    case 'imidiate':
-      return 'danger' as const;
-    default:
-      return 'default' as const;
-  }
-}
+// Centralized event priority color helper for consistency
 
 export default function EventsBySpace({ spaces, events }: Props) {
   const router = useRouter();
 
   // Local filters (no URL sync)
   const [query, setQuery] = useState('');
+  const deferredQuery = useDeferredValue(query);
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
   type EventPriority = NonNullable<Tables<'Event'>['priority']>;
   const eventPriorities = ['low', 'medium', 'high', 'imidiate'] as const;
@@ -50,7 +39,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
 
   // Derived filtered + sorted events
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     let rows = events.filter((e) => {
       if (spaceFilter !== 'all' && e.space_id !== spaceFilter) return false;
       if (priorityFilter !== 'all' && (e.priority ?? 'none') !== priorityFilter) return false;
@@ -74,7 +63,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
     });
 
     return rows;
-  }, [events, query, spaceFilter, priorityFilter, hidePast, sortBy]);
+  }, [events, deferredQuery, spaceFilter, priorityFilter, hidePast, sortBy]);
 
   // Group by space after filtering
   const eventsBySpace = useMemo(() => {
@@ -88,6 +77,58 @@ export default function EventsBySpace({ spaces, events }: Props) {
   }, [spaces, filtered]);
 
   const nonEmptySpaces = spaces.filter((s) => (eventsBySpace.get(s.id)?.length ?? 0) > 0);
+
+  // Simple client-side pagination per space to reduce DOM load
+  const DEFAULT_VISIBLE = 50;
+  const [visibleBySpace, setVisibleBySpace] = useState<Record<number, number>>({});
+  const getVisible = useCallback((spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE, [visibleBySpace]);
+  const showMore = useCallback((spaceId: number) => {
+    setVisibleBySpace((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE }));
+  }, []);
+
+  // Stable column definitions
+  const columns: Column<EventWithSpace>[] = useMemo(
+    () => [
+      {
+        key: 'name',
+        header: 'Name',
+        className: 'w-[40%] min-w-[220px] max-w-[420px] truncate',
+        cell: (e) => <span className='truncate text-white'>{e.Name}</span>,
+      },
+      {
+        key: 'date',
+        header: 'Date',
+        className: 'w-[18%] min-w-[180px]',
+        cell: (e) => (
+          <div className='flex items-center gap-2'>
+            <span>{formatDate(e.date)}</span>
+            {e.overdue && (
+              <Chip size='sm' variant='solid' color='danger'>
+                Overdue
+              </Chip>
+            )}
+          </div>
+        ),
+      },
+      {
+        key: 'priority',
+        header: 'Priority',
+        className: 'w-[12%] min-w-[120px]',
+        cell: (e) => (
+          <Chip size='sm' variant='solid' color={eventPriorityColor(e.priority)} className='capitalize'>
+            {e.priority ?? 'none'}
+          </Chip>
+        ),
+      },
+      {
+        key: 'created',
+        header: 'Created',
+        className: 'w-[18%] min-w-[140px]',
+        cell: (e) => formatDate(e.created_at),
+      },
+    ],
+    [],
+  );
   const hasAny = events.length > 0;
 
   if (!hasAny) {
@@ -174,50 +215,8 @@ export default function EventsBySpace({ spaces, events }: Props) {
       </Card>
       {nonEmptySpaces.map((space) => {
         const rows = eventsBySpace.get(space.id) ?? [];
-        const columns: Column<EventWithSpace>[] = [
-          {
-            key: 'name',
-            header: 'Name',
-            className: 'w-[40%] min-w-[220px] max-w-[420px] truncate',
-            cell: (e) => <span className='truncate text-white'>{e.Name}</span>,
-          },
-          {
-            key: 'date',
-            header: 'Date',
-            className: 'w-[18%] min-w-[180px]',
-            cell: (e) => (
-              <div className='flex items-center gap-2'>
-                <span>{formatDate(e.date)}</span>
-                {e.overdue && (
-                  <Chip size='sm' variant='solid' color='danger'>
-                    Overdue
-                  </Chip>
-                )}
-              </div>
-            ),
-          },
-          {
-            key: 'priority',
-            header: 'Priority',
-            className: 'w-[12%] min-w-[120px]',
-            cell: (e) => (
-              <Chip
-                size='sm'
-                variant='solid'
-                color={priorityColor(e.priority)}
-                className='capitalize'
-              >
-                {e.priority ?? 'none'}
-              </Chip>
-            ),
-          },
-          {
-            key: 'created',
-            header: 'Created',
-            className: 'w-[18%] min-w-[140px]',
-            cell: (e) => formatDate(e.created_at),
-          },
-        ];
+        const visible = getVisible(space.id);
+        const rowsSlice = rows.slice(0, visible);
 
         return (
           <Card key={space.id} shadow='sm' className='bg-content2 border border-neutral-700'>
@@ -227,10 +226,10 @@ export default function EventsBySpace({ spaces, events }: Props) {
               </div>
               {/* Mobile – stacked list */}
               <ul className='flex flex-col gap-2 md:hidden'>
-                {rows.length === 0 && (
+                {rowsSlice.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No events in this space</li>
                 )}
-                {rows.map((e) => (
+                {rowsSlice.map((e) => (
                   <li
                     key={e.id}
                     className='bg-content3/20 hover:bg-content3/40 rounded-md border border-neutral-800 p-3 transition-colors'
@@ -249,7 +248,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
                       <Chip
                         size='sm'
                         variant='solid'
-                        color={priorityColor(e.priority)}
+                        color={eventPriorityColor(e.priority)}
                         className='shrink-0 capitalize'
                       >
                         {e.priority ?? 'none'}
@@ -271,12 +270,22 @@ export default function EventsBySpace({ spaces, events }: Props) {
               <div className='hidden md:block'>
                 <DataTable
                   ariaLabel={`Events in ${space.name}`}
-                  data={rows}
+                  data={rowsSlice}
                   columns={columns}
                   getKey={(e) => e.id}
                   emptyContent='No events in this space'
                   onRowClick={(e) => router.push(`/app/events/${e.id}`)}
                 />
+                {rows.length > rowsSlice.length && (
+                  <div className='mt-2 flex justify-center'>
+                    <button
+                      className='text-primary text-sm underline-offset-2 hover:underline'
+                      onClick={() => showMore(space.id)}
+                    >
+                      Load more ({rows.length - rowsSlice.length} more)
+                    </button>
+                  </div>
+                )}
               </div>
             </CardBody>
           </Card>

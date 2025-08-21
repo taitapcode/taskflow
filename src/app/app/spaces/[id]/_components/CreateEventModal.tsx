@@ -55,17 +55,14 @@ export default function CreateEventModal({
     setSaving(true);
     setError(null);
     const supabase = createClient();
-    const payload: Partial<Tables<'Event'>> & { Name: string; space_id: number; date: string } = {
+    const payload: import('@/lib/supabase/database.types').TablesInsert<'Event'> = {
       Name: name.trim(),
       space_id: spaceId,
       date: new Date(date).toISOString(),
+      ...(priority ? { priority } : {}),
+      ...(description.trim() ? { description: description.trim() } : {}),
     };
-    if (priority) payload.priority = priority;
-    if (description.trim()) payload.description = description.trim();
-    const { error: err } = await supabase
-      .from('Event')
-      .insert(payload as any)
-      .single();
+    const { error: err } = await supabase.from('Event').insert(payload).single();
     setSaving(false);
     if (err) {
       setError(err.message);

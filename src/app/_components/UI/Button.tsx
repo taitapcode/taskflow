@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import cn from '@/lib/cn';
 
 type ButtonColor = 'default' | 'primary' | 'warning' | 'success' | 'danger';
@@ -101,6 +101,7 @@ export default function Button({
   href,
   type = 'button',
 }: ButtonProps) {
+  const prefersReducedMotion = useReducedMotion();
   const isDisabledFinal = (isDisabled ?? disabled ?? false) || Boolean(isLoading);
   const base = cn(
     'inline-flex select-none items-center justify-center gap-2 font-medium transition-all cursor-pointer',
@@ -113,11 +114,13 @@ export default function Button({
   );
 
   // Use Motion for subtle hover/tap feedback
-  const motionProps = {
-    whileHover: isDisabledFinal ? undefined : { y: -1 },
-    whileTap: isDisabledFinal ? undefined : { scale: 0.98 },
-    transition: { type: 'spring', stiffness: 500, damping: 30 },
-  } as const;
+  const motionProps = prefersReducedMotion
+    ? ({} as const)
+    : ({
+        whileHover: isDisabledFinal ? undefined : { y: -1 },
+        whileTap: isDisabledFinal ? undefined : { scale: 0.98 },
+        transition: { type: 'spring', stiffness: 500, damping: 30 },
+      } as const);
 
   if (href) {
     return (

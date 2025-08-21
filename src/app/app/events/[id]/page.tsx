@@ -7,7 +7,6 @@ type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | '
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function EventDetailPage({ params }: Props) {

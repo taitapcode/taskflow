@@ -1,11 +1,11 @@
 'use client';
 import type { Tables, TablesUpdate } from '@/lib/supabase/database.types';
-import { Button, Card, CardBody, Chip, DropdownSelect, Input } from '@/app/_components/UI';
+import { Button, Card, CardBody, Chip, DropdownSelect } from '@/app/_components/UI';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { formatDate } from '@/lib/date';
 import { eventPriorityColor, taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import Link from 'next/link';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CreateTaskModal from './CreateTaskModal';
 import CreateEventModal from './CreateEventModal';
@@ -144,6 +144,13 @@ export default function SpaceDetail({
       }
     });
   }, [events, eventSortBy]);
+
+  // Progressive rendering for large lists
+  const DEFAULT_VISIBLE = 50;
+  const [tasksVisible, setTasksVisible] = useState(DEFAULT_VISIBLE);
+  const [eventsVisible, setEventsVisible] = useState(DEFAULT_VISIBLE);
+  const tasksSlice = useMemo(() => tasksSorted.slice(0, tasksVisible), [tasksSorted, tasksVisible]);
+  const eventsSlice = useMemo(() => eventsSorted.slice(0, eventsVisible), [eventsSorted, eventsVisible]);
   return (
     <>
       <header className='flex items-start justify-between gap-4'>
@@ -211,7 +218,7 @@ export default function SpaceDetail({
               <p className='text-foreground-500 text-sm'>No tasks in this space.</p>
             ) : (
               <ul className='divide-y divide-neutral-800'>
-                {tasksSorted.map((t) => (
+                {tasksSlice.map((t) => (
                   <li key={t.id}>
                     <Link
                       href={`/app/tasks/${t.id}`}
@@ -255,6 +262,16 @@ export default function SpaceDetail({
                   </li>
                 ))}
               </ul>
+            )}
+            {tasksSorted.length > tasksSlice.length && (
+              <div className='mt-3 flex justify-center'>
+                <button
+                  className='text-primary text-sm underline-offset-2 hover:underline'
+                  onClick={() => setTasksVisible((v) => v + DEFAULT_VISIBLE)}
+                >
+                  Load more ({tasksSorted.length - tasksSlice.length} more)
+                </button>
+              </div>
             )}
           </CardBody>
         </Card>
@@ -300,7 +317,7 @@ export default function SpaceDetail({
               <p className='text-foreground-500 text-sm'>No events in this space.</p>
             ) : (
               <ul className='divide-y divide-neutral-800'>
-                {eventsSorted.map((e) => (
+                {eventsSlice.map((e) => (
                   <li key={e.id}>
                     <Link
                       href={`/app/events/${e.id}`}
@@ -332,6 +349,16 @@ export default function SpaceDetail({
                   </li>
                 ))}
               </ul>
+            )}
+            {eventsSorted.length > eventsSlice.length && (
+              <div className='mt-3 flex justify-center'>
+                <button
+                  className='text-primary text-sm underline-offset-2 hover:underline'
+                  onClick={() => setEventsVisible((v) => v + DEFAULT_VISIBLE)}
+                >
+                  Load more ({eventsSorted.length - eventsSlice.length} more)
+                </button>
+              </div>
             )}
           </CardBody>
         </Card>

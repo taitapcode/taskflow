@@ -1,9 +1,8 @@
 'use client';
 import type { Tables } from '@/lib/supabase/database.types';
-import createClient from '@/lib/supabase/browser';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button, Card, CardBody, Input } from '@/app/_components/UI';
+import { Button, Card, CardBody } from '@/app/_components/UI';
 import CreateSpaceModal from './CreateSpaceModal';
 import { formatDate } from '@/lib/date';
 

@@ -3,7 +3,7 @@ import cn from '@/lib/cn';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSidebarStore } from '../../_store/sidebar';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 
 export type SidebarLinkProps = {
@@ -13,6 +13,7 @@ export type SidebarLinkProps = {
 };
 
 export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProps) {
+  const prefersReducedMotion = useReducedMotion();
   const { open } = useSidebarStore();
   const pathname = usePathname();
   const [isHovered, setIsHovered] = useState(false);
@@ -37,12 +38,7 @@ export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProp
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Active indicator */}
-      <motion.span
-        layout
-        className='bg-primary absolute top-1/2 left-0 h-6 w-0.5 -translate-y-1/2 rounded-full'
-        animate={{ opacity: isActive ? 1 : 0 }}
-        transition={{ duration: 0.15 }}
-      />
+      <motion.span layout className='bg-primary absolute top-1/2 left-0 h-6 w-0.5 -translate-y-1/2 rounded-full' animate={prefersReducedMotion ? undefined : { opacity: isActive ? 1 : 0 }} transition={{ duration: 0.15 }} />
       <div className='grid h-9 w-9 flex-none place-items-center'>
         <Icon
           size={22}
@@ -50,15 +46,9 @@ export default function SidebarLink({ href, label, icon: Icon }: SidebarLinkProp
         />
       </div>
       <motion.span
-        animate={{
-          x: open ? (isHovered ? 10 : 0) : 20,
-          opacity: open ? 1 : 0,
-        }}
+        animate={prefersReducedMotion ? undefined : { x: open ? (isHovered ? 10 : 0) : 20, opacity: open ? 1 : 0 }}
         transition={{ duration: 0.1 }}
-        className={cn(
-          'text-md w-60 overflow-hidden text-lg whitespace-nowrap',
-          isActive ? 'text-foreground' : 'text-foreground-600',
-        )}
+        className={cn('text-md w-60 overflow-hidden text-lg whitespace-nowrap', isActive ? 'text-foreground' : 'text-foreground-600')}
       >
         {label}
       </motion.span>

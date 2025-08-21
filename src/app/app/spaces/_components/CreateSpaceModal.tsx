@@ -49,11 +49,11 @@ export default function CreateSpaceModal({
       setError(userErr?.message ?? 'You must be signed in');
       return;
     }
-    const payload: Partial<Tables<'Space'>> & { name: string; user_id: string } = {
+    const payload: import('@/lib/supabase/database.types').TablesInsert<'Space'> = {
       name: name.trim(),
       user_id: user.id,
-    } as any;
-    if (description.trim()) (payload as any).description = description.trim();
+      ...(description.trim() ? { description: description.trim() } : {}),
+    };
     const { data, error: err } = await supabase
       .from('Space')
       .insert(payload)
@@ -128,4 +128,3 @@ export default function CreateSpaceModal({
     </AnimatePresence>
   );
 }
-

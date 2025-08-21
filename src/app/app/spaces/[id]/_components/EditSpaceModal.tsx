@@ -44,8 +44,8 @@ export default function EditSpaceModal({
     try {
       await onSubmit({ name: n, description });
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Failed to save');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -115,4 +115,3 @@ export default function EditSpaceModal({
     </AnimatePresence>
   );
 }
-
