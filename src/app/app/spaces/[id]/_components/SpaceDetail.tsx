@@ -31,7 +31,7 @@ export default function SpaceDetail({
     else router.push('/app/spaces');
   }, [router]);
 
-  // Sorting state and derived lists
+  // Tasks are always sorted by status (primary), with a secondary sort chosen by user
   const taskSortOptions = [
     'created_desc',
     'created_asc',
@@ -57,9 +57,19 @@ export default function SpaceDetail({
   const [eventSortBy, setEventSortBy] = useState<EventSortBy>('date_asc');
 
   const tasksSorted = useMemo(() => {
-    const rank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
+    const statusRank: Record<string, number> = {
+      overdue: 0,
+      'in-progress': 1,
+      'to-do': 2,
+      done: 3,
+    };
+    const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
     const arr = [...tasks];
     return arr.sort((a, b) => {
+      const sa = statusRank[a.status] ?? 99;
+      const sb = statusRank[b.status] ?? 99;
+      if (sa !== sb) return sa - sb; // Always group by status first
+
       switch (taskSortBy) {
         case 'created_asc':
           return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -76,9 +86,9 @@ export default function SpaceDetail({
           return bd - ad;
         }
         case 'priority_desc':
-          return (rank[b.priority ?? 'low'] ?? -1) - (rank[a.priority ?? 'low'] ?? -1);
+          return (priorityRank[b.priority ?? 'low'] ?? -1) - (priorityRank[a.priority ?? 'low'] ?? -1);
         case 'priority_asc':
-          return (rank[a.priority ?? 'low'] ?? -1) - (rank[b.priority ?? 'low'] ?? -1);
+          return (priorityRank[a.priority ?? 'low'] ?? -1) - (priorityRank[b.priority ?? 'low'] ?? -1);
       }
     });
   }, [tasks, taskSortBy]);
@@ -132,7 +142,7 @@ export default function SpaceDetail({
                 </Chip>
                 <label className='text-foreground-600 hidden text-xs sm:block'>Sort</label>
                 <DropdownSelect
-                  aria-label='Sort tasks'
+                  aria-label='Sort tasks (within status)'
                   value={taskSortBy}
                   onChange={(v) => setTaskSortBy(isTaskSortBy(v) ? v : 'created_desc')}
                   options={[
