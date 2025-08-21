@@ -2,6 +2,7 @@
 import type { Tables } from '@/lib/supabase/database.types';
 import createClient from '@/lib/supabase/browser';
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button, Card, CardBody, Input } from '@/app/_components/UI';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name' | 'created_at'>;
@@ -81,11 +82,18 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
           ) : (
             <ul className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
               {spaces.map((s) => (
-                <li key={s.id} className='bg-content3/20 rounded-md border border-neutral-800 p-3'>
-                  <p className='font-medium'>{s.name}</p>
-                  <p className='text-foreground-600 mt-1 text-xs'>
-                    Created {new Date(s.created_at).toLocaleDateString()}
-                  </p>
+                <li key={s.id}>
+                  <Link
+                    href={`/app/spaces/${s.id}`}
+                    className='bg-content3/20 block rounded-md border border-neutral-800 p-3 transition-colors hover:bg-content3/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60'
+                  >
+                    <p className='font-medium underline-offset-2 group-hover:underline'>
+                      {s.name}
+                    </p>
+                    <p className='text-foreground-600 mt-1 text-xs'>
+                      Created {new Date(s.created_at).toLocaleDateString()}
+                    </p>
+                  </Link>
                 </li>
               ))}
             </ul>
