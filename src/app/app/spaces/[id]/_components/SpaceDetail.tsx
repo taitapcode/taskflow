@@ -4,6 +4,9 @@ import { Button, Card, CardBody, Chip } from '@/app/_components/UI';
 import { formatRelativeTime } from '@/lib/relative-time';
 import { eventPriorityColor, taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import Link from 'next/link';
+import { useState } from 'react';
+import CreateTaskModal from './CreateTaskModal';
+import CreateEventModal from './CreateEventModal';
 
 type Space = Tables<'Space'>;
 type Task = Pick<Tables<'Task'>, 'id' | 'name' | 'status' | 'priority' | 'deadline' | 'created_at'>;
@@ -18,6 +21,8 @@ export default function SpaceDetail({
   tasks: Task[];
   events: Event[];
 }) {
+  const [showTask, setShowTask] = useState(false);
+  const [showEvent, setShowEvent] = useState(false);
   return (
     <>
       <header className='flex items-start justify-between gap-4'>
@@ -28,7 +33,23 @@ export default function SpaceDetail({
             <span className='text-foreground-500'> • {formatRelativeTime(space.created_at)}</span>
           </p>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex flex-wrap items-center gap-2'>
+          <Button
+            variant='bordered'
+            size='sm'
+            radius='full'
+            onClick={() => setShowTask(true)}
+          >
+            New Task
+          </Button>
+          <Button
+            variant='bordered'
+            size='sm'
+            radius='full'
+            onClick={() => setShowEvent(true)}
+          >
+            New Event
+          </Button>
           <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
             Back to Spaces
           </Button>
@@ -123,6 +144,10 @@ export default function SpaceDetail({
           </CardBody>
         </Card>
       </div>
+
+      {/* Modals */}
+      <CreateTaskModal open={showTask} spaceId={space.id} onClose={() => setShowTask(false)} />
+      <CreateEventModal open={showEvent} spaceId={space.id} onClose={() => setShowEvent(false)} />
     </>
   );
 }
