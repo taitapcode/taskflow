@@ -214,6 +214,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                 ]}
                 variant='flat'
                 size='sm'
+                className='w-48'
               />
             </div>
           </div>

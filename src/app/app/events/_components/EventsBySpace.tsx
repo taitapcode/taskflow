@@ -166,6 +166,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
                 ]}
                 variant='flat'
                 size='sm'
+                className='w-48'
               />
             </div>
           </div>
