@@ -4,6 +4,7 @@ import createClient from '@/lib/supabase/browser';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button, Card, CardBody, Input } from '@/app/_components/UI';
+import { formatDate } from '@/lib/date';
 
 type Space = Pick<Tables<'Space'>, 'id' | 'name' | 'created_at'>;
 
@@ -91,7 +92,7 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
                       {s.name}
                     </p>
                     <p className='text-foreground-600 mt-1 text-xs'>
-                      Created {new Date(s.created_at).toLocaleDateString()}
+                      Created {formatDate(s.created_at)}
                     </p>
                   </Link>
                 </li>

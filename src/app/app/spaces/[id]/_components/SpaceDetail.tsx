@@ -2,6 +2,7 @@
 import type { Tables } from '@/lib/supabase/database.types';
 import { Button, Card, CardBody, Chip } from '@/app/_components/UI';
 import { formatRelativeTime } from '@/lib/relative-time';
+import { formatDate } from '@/lib/date';
 import { eventPriorityColor, taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -29,7 +30,7 @@ export default function SpaceDetail({
         <div>
           <h1 className='text-2xl font-semibold'>{space.name}</h1>
           <p className='text-foreground-500 mt-1 text-sm'>
-            Created {new Date(space.created_at).toLocaleString()}
+            Created {formatDate(space.created_at)}
             <span className='text-foreground-500'> • {formatRelativeTime(space.created_at)}</span>
           </p>
         </div>
@@ -87,11 +88,11 @@ export default function SpaceDetail({
                           </Chip>
                         </div>
                         <p className='text-foreground-600 mt-1 text-xs'>
-                          Created {new Date(t.created_at).toLocaleString()}
+                          Created {formatDate(t.created_at)}
                           <span> • {formatRelativeTime(t.created_at)}</span>
                           {t.deadline && (
                             <>
-                              <span> • Deadline {new Date(t.deadline).toLocaleString()}</span>
+                              <span> • Deadline {formatDate(t.deadline)}</span>
                               <span className='text-foreground-500'> ({formatRelativeTime(t.deadline)})</span>
                             </>
                           )}
@@ -132,7 +133,7 @@ export default function SpaceDetail({
                           </Chip>
                         </div>
                         <p className='text-foreground-600 mt-1 text-xs'>
-                          Scheduled {new Date(e.date).toLocaleString()}
+                          Scheduled {formatDate(e.date)}
                           <span> • {formatRelativeTime(e.date)}</span>
                         </p>
                       </div>
