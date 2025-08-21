@@ -129,7 +129,7 @@ export default function CreateEventModal({
 
                 <Input
                   label='Date'
-                  type='datetime-local'
+                  type='date'
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   required
