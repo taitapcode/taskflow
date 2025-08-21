@@ -128,6 +128,11 @@ export default function SpaceDetail({
             Created {formatDate(space.created_at)}
             <span className='text-foreground-500'> • {formatRelativeTime(space.created_at)}</span>
           </p>
+          {space.description && (
+            <p className='text-foreground-500 mt-2 max-w-prose whitespace-pre-wrap text-sm'>
+              {space.description}
+            </p>
+          )}
         </div>
         <div className='flex flex-wrap items-center gap-2'>
           <Button onClick={goBack} variant='bordered' size='sm' radius='full'>

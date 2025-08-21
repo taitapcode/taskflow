@@ -2,7 +2,7 @@ import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import ManageSpaces from './_components/ManageSpaces';
 
-type Space = Pick<Tables<'Space'>, 'id' | 'name' | 'created_at'>;
+type Space = Pick<Tables<'Space'>, 'id' | 'name' | 'created_at' | 'description'>;
 
 export default async function SpacesPage() {
   const supabase = await createClient();
@@ -14,7 +14,7 @@ export default async function SpacesPage() {
 
   const { data, error } = await supabase
     .from('Space')
-    .select('id,name,created_at')
+    .select('id,name,created_at,description')
     .eq('user_id', user?.id ?? '')
     .order('created_at', { ascending: false });
   if (error) return <main>Error loading spaces: {error.message}</main>;

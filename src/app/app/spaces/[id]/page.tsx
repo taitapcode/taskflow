@@ -24,7 +24,11 @@ export default async function SpacePage({ params }: Props) {
 
   const [{ data: space, error: spaceError }, { data: tasks }, { data: events }] = await Promise.all(
     [
-      supabase.from('Space').select('id,name,created_at,user_id').eq('id', id).single<Space>(),
+      supabase
+        .from('Space')
+        .select('id,name,description,created_at,user_id')
+        .eq('id', id)
+        .single<Space>(),
       supabase
         .from('Task')
         .select('id,name,status,priority,deadline,created_at')
