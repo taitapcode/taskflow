@@ -21,6 +21,7 @@ export type Database = {
           description: string | null
           id: number
           Name: string
+          overdue: boolean
           priority: Database["public"]["Enums"]["priority"] | null
           space_id: number
         }
@@ -30,6 +31,7 @@ export type Database = {
           description?: string | null
           id?: number
           Name: string
+          overdue?: boolean
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id: number
         }
@@ -39,6 +41,7 @@ export type Database = {
           description?: string | null
           id?: number
           Name?: string
+          overdue?: boolean
           priority?: Database["public"]["Enums"]["priority"] | null
           space_id?: number
         }
