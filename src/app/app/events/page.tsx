@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import EventsBySpace from './_components/EventsBySpace';
+import { updateOverdueEventsForSpaces } from '@/lib/overdue';
 
 type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
@@ -23,6 +24,8 @@ export default async function EventsPage() {
 
   let events: EventWithSpace[] = [];
   if (spaceIds.length > 0) {
+    // Auto-mark overdue events before fetching
+    await updateOverdueEventsForSpaces(supabase, spaceIds);
     const { data: eventsData, error: eventsError } = await supabase
       .from('Event')
       .select('id,Name,date,description,priority,space_id,created_at,Space(id,name)')

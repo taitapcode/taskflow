@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import EventDetail from './_components/EventDetail';
+import { updateOverdueEventById } from '@/lib/overdue';
 
 type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
 
@@ -15,6 +16,8 @@ export default async function EventDetailPage({ params }: Props) {
   if (Number.isNaN(id)) return <main>Invalid event id</main>;
 
   const supabase = await createClient();
+  // Auto-mark as overdue if needed before fetching
+  await updateOverdueEventById(supabase, id);
   const { data, error } = await supabase
     .from('Event')
     .select('id,Name,description,date,priority,created_at,space_id,Space(id,name)')

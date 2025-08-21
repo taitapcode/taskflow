@@ -35,3 +35,32 @@ export async function updateOverdueTaskById(
   return { error } as const;
 }
 
+// Update Event.overdue to true when event date is past now
+export async function updateOverdueEventsForSpaces(
+  supabase: SupabaseClient<Database>,
+  spaceIds: number[],
+) {
+  if (!spaceIds?.length) return { error: null } as const;
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from('Event')
+    .update({ overdue: true })
+    .in('space_id', spaceIds)
+    .lt('date', nowIso)
+    .eq('overdue', false);
+  return { error } as const;
+}
+
+export async function updateOverdueEventById(
+  supabase: SupabaseClient<Database>,
+  eventId: number,
+) {
+  const nowIso = new Date().toISOString();
+  const { error } = await supabase
+    .from('Event')
+    .update({ overdue: true })
+    .eq('id', eventId)
+    .lt('date', nowIso)
+    .eq('overdue', false);
+  return { error } as const;
+}
