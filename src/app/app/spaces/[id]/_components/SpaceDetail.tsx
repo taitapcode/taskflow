@@ -126,8 +126,8 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Tasks</h2>
-              <div className='flex items-center gap-2'>
-                <Chip size='sm' variant='flat'>
+              <div className='flex items-center gap-2 flex-nowrap'>
+                <Chip size='sm' variant='flat' className='shrink-0'>
                   {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                 </Chip>
                 <label className='text-foreground-600 hidden text-xs sm:block'>Sort</label>
@@ -145,11 +145,13 @@ export default function SpaceDetail({
                   ]}
                   variant='flat'
                   size='sm'
+                  className='w-48 shrink-0'
                 />
                 <Button
                   variant='bordered'
                   size='sm'
                   radius='full'
+                  className='shrink-0'
                   onClick={() => setShowTask(true)}
                 >
                   New Task
@@ -200,8 +202,8 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Events</h2>
-              <div className='flex items-center gap-2'>
-                <Chip size='sm' variant='flat'>
+              <div className='flex items-center gap-2 flex-nowrap'>
+                <Chip size='sm' variant='flat' className='shrink-0'>
                   {events.length} {events.length === 1 ? 'event' : 'events'}
                 </Chip>
                 <label className='text-foreground-600 hidden text-xs sm:block'>Sort</label>
@@ -219,11 +221,13 @@ export default function SpaceDetail({
                   ]}
                   variant='flat'
                   size='sm'
+                  className='w-48 shrink-0'
                 />
                 <Button
                   variant='bordered'
                   size='sm'
                   radius='full'
+                  className='shrink-0'
                   onClick={() => setShowEvent(true)}
                 >
                   New Event
