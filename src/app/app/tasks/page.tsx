@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import TasksBySpace from './_components/TasksBySpace';
+import CreateTaskAction from './_components/CreateTaskAction';
 import { updateOverdueTasksForSpaces } from '@/lib/overdue';
 
 type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
@@ -36,15 +37,19 @@ export default async function TasksPage() {
   }
 
   return (
-    <main className='flex min-h-full flex-col gap-6'>
-      <header className='flex items-end justify-between'>
+    <main className='flex h-full min-h-0 flex-1 flex-col gap-4 overflow-hidden'>
+      <header className='shrink-0'>
         <div>
           <h1 className='text-2xl font-semibold'>Tasks</h1>
           <p className='text-foreground-500 mt-1 text-sm'>All tasks across your spaces</p>
         </div>
       </header>
-
-      <TasksBySpace spaces={spaces ?? []} tasks={tasks} />
+      <div className='shrink-0'>
+        <CreateTaskAction spaces={spaces ?? []} />
+      </div>
+      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+        <TasksBySpace spaces={spaces ?? []} tasks={tasks} />
+      </div>
     </main>
   );
 }

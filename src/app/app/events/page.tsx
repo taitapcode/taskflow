@@ -1,6 +1,7 @@
 import createClient from '@/lib/supabase/server';
 import type { Tables } from '@/lib/supabase/database.types';
 import EventsBySpace from './_components/EventsBySpace';
+import CreateEventAction from './_components/CreateEventAction';
 import { updateOverdueEventsForSpaces } from '@/lib/overdue';
 
 type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
@@ -36,15 +37,19 @@ export default async function EventsPage() {
   }
 
   return (
-    <main className='flex min-h-full flex-col gap-6'>
-      <header className='flex items-end justify-between'>
+    <main className='flex h-full min-h-0 flex-1 flex-col gap-4 overflow-hidden'>
+      <header className='shrink-0'>
         <div>
           <h1 className='text-2xl font-semibold'>Events</h1>
           <p className='text-foreground-500 mt-1 text-sm'>All events across your spaces</p>
         </div>
       </header>
-
-      <EventsBySpace spaces={spaces ?? []} events={events} />
+      <div className='shrink-0'>
+        <CreateEventAction spaces={spaces ?? []} />
+      </div>
+      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+        <EventsBySpace spaces={spaces ?? []} events={events} />
+      </div>
     </main>
   );
 }
