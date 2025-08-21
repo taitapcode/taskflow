@@ -19,10 +19,7 @@ export async function updateOverdueTasksForSpaces(
   return { error } as const;
 }
 
-export async function updateOverdueTaskById(
-  supabase: SupabaseClient<Database>,
-  taskId: number,
-) {
+export async function updateOverdueTaskById(supabase: SupabaseClient<Database>, taskId: number) {
   const nowIso = new Date().toISOString();
   const { error } = await supabase
     .from('Task')
@@ -51,10 +48,7 @@ export async function updateOverdueEventsForSpaces(
   return { error } as const;
 }
 
-export async function updateOverdueEventById(
-  supabase: SupabaseClient<Database>,
-  eventId: number,
-) {
+export async function updateOverdueEventById(supabase: SupabaseClient<Database>, eventId: number) {
   const nowIso = new Date().toISOString();
   const { error } = await supabase
     .from('Event')

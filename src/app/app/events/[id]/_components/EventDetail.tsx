@@ -171,7 +171,9 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                   <span>{formatDate(event.date)}</span>
                   <span className='text-foreground-500'>• {formatRelativeTime(event.date)}</span>
                   {event.overdue && (
-                    <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                    <Chip size='sm' variant='solid' color='danger'>
+                      Overdue
+                    </Chip>
                   )}
                 </div>
               </div>

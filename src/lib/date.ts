@@ -5,4 +5,3 @@ export function formatDate(input: string | Date): string {
   const yyyy = d.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
-

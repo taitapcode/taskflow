@@ -41,7 +41,8 @@ export default function SpaceDetail({
     'priority_asc',
   ] as const;
   type TaskSortBy = (typeof taskSortOptions)[number];
-  const isTaskSortBy = (v: string): v is TaskSortBy => (taskSortOptions as readonly string[]).includes(v);
+  const isTaskSortBy = (v: string): v is TaskSortBy =>
+    (taskSortOptions as readonly string[]).includes(v);
   const [taskSortBy, setTaskSortBy] = useState<TaskSortBy>('created_desc');
 
   const eventSortOptions = [
@@ -53,7 +54,8 @@ export default function SpaceDetail({
     'priority_asc',
   ] as const;
   type EventSortBy = (typeof eventSortOptions)[number];
-  const isEventSortBy = (v: string): v is EventSortBy => (eventSortOptions as readonly string[]).includes(v);
+  const isEventSortBy = (v: string): v is EventSortBy =>
+    (eventSortOptions as readonly string[]).includes(v);
   const [eventSortBy, setEventSortBy] = useState<EventSortBy>('date_asc');
 
   const tasksSorted = useMemo(() => {
@@ -86,9 +88,13 @@ export default function SpaceDetail({
           return bd - ad;
         }
         case 'priority_desc':
-          return (priorityRank[b.priority ?? 'low'] ?? -1) - (priorityRank[a.priority ?? 'low'] ?? -1);
+          return (
+            (priorityRank[b.priority ?? 'low'] ?? -1) - (priorityRank[a.priority ?? 'low'] ?? -1)
+          );
         case 'priority_asc':
-          return (priorityRank[a.priority ?? 'low'] ?? -1) - (priorityRank[b.priority ?? 'low'] ?? -1);
+          return (
+            (priorityRank[a.priority ?? 'low'] ?? -1) - (priorityRank[b.priority ?? 'low'] ?? -1)
+          );
       }
     });
   }, [tasks, taskSortBy]);
@@ -136,7 +142,7 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Tasks</h2>
-              <div className='flex items-center gap-2 flex-nowrap'>
+              <div className='flex flex-nowrap items-center gap-2'>
                 <Chip size='sm' variant='flat' className='shrink-0'>
                   {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
                 </Chip>
@@ -176,15 +182,25 @@ export default function SpaceDetail({
                   <li key={t.id}>
                     <Link
                       href={`/app/tasks/${t.id}`}
-                      className='block rounded-md px-2 py-3 transition-colors hover:bg-content3/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60'
+                      className='hover:bg-content3/40 focus-visible:ring-primary/60 block rounded-md px-2 py-3 transition-colors focus:outline-none focus-visible:ring-2'
                     >
                       <div className='min-w-0'>
                         <div className='flex items-center gap-2'>
                           <span className='font-medium'>{t.name}</span>
-                          <Chip size='sm' variant='solid' color={taskStatusColor(t.status)} className='capitalize'>
+                          <Chip
+                            size='sm'
+                            variant='solid'
+                            color={taskStatusColor(t.status)}
+                            className='capitalize'
+                          >
                             {t.status}
                           </Chip>
-                          <Chip size='sm' variant='flat' color={taskPriorityColor(t.priority)} className='capitalize'>
+                          <Chip
+                            size='sm'
+                            variant='flat'
+                            color={taskPriorityColor(t.priority)}
+                            className='capitalize'
+                          >
                             {t.priority ?? 'none'}
                           </Chip>
                         </div>
@@ -194,7 +210,10 @@ export default function SpaceDetail({
                           {t.deadline && (
                             <>
                               <span> • Deadline {formatDate(t.deadline)}</span>
-                              <span className='text-foreground-500'> ({formatRelativeTime(t.deadline)})</span>
+                              <span className='text-foreground-500'>
+                                {' '}
+                                ({formatRelativeTime(t.deadline)})
+                              </span>
                             </>
                           )}
                         </p>
@@ -212,7 +231,7 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Events</h2>
-              <div className='flex items-center gap-2 flex-nowrap'>
+              <div className='flex flex-nowrap items-center gap-2'>
                 <Chip size='sm' variant='flat' className='shrink-0'>
                   {events.length} {events.length === 1 ? 'event' : 'events'}
                 </Chip>
@@ -252,16 +271,23 @@ export default function SpaceDetail({
                   <li key={e.id}>
                     <Link
                       href={`/app/events/${e.id}`}
-                      className='block rounded-md px-2 py-3 transition-colors hover:bg-content3/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60'
+                      className='hover:bg-content3/40 focus-visible:ring-primary/60 block rounded-md px-2 py-3 transition-colors focus:outline-none focus-visible:ring-2'
                     >
                       <div className='min-w-0'>
                         <div className='flex items-center gap-2'>
                           <span className='font-medium'>{e.Name}</span>
-                          <Chip size='sm' variant='flat' color={eventPriorityColor(e.priority)} className='capitalize'>
+                          <Chip
+                            size='sm'
+                            variant='flat'
+                            color={eventPriorityColor(e.priority)}
+                            className='capitalize'
+                          >
                             {e.priority ?? 'none'}
                           </Chip>
                           {e.overdue && (
-                            <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                            <Chip size='sm' variant='solid' color='danger'>
+                              Overdue
+                            </Chip>
                           )}
                         </div>
                         <p className='text-foreground-600 mt-1 text-xs'>

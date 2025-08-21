@@ -189,7 +189,9 @@ export default function EventsBySpace({ spaces, events }: Props) {
               <div className='flex items-center gap-2'>
                 <span>{formatDate(e.date)}</span>
                 {e.overdue && (
-                  <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                  <Chip size='sm' variant='solid' color='danger'>
+                    Overdue
+                  </Chip>
                 )}
               </div>
             ),
@@ -256,7 +258,9 @@ export default function EventsBySpace({ spaces, events }: Props) {
                     <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
                       <span className='text-foreground-500'>{formatDate(e.date)}</span>
                       {e.overdue && (
-                        <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                        <Chip size='sm' variant='solid' color='danger'>
+                          Overdue
+                        </Chip>
                       )}
                     </div>
                   </li>

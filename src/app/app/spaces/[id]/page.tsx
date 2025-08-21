@@ -22,25 +22,23 @@ export default async function SpacePage({ params }: Props) {
     updateOverdueEventsForSpaces(supabase, [id]),
   ]);
 
-  const [{ data: space, error: spaceError }, { data: tasks }, { data: events }] = await Promise.all([
-    supabase
-      .from('Space')
-      .select('id,name,created_at,user_id')
-      .eq('id', id)
-      .single<Space>(),
-    supabase
-      .from('Task')
-      .select('id,name,status,priority,deadline,created_at')
-      .eq('space_id', id)
-      .order('created_at', { ascending: false })
-      .returns<Task[]>(),
-    supabase
-      .from('Event')
-      .select('id,Name,priority,date,created_at,overdue')
-      .eq('space_id', id)
-      .order('date', { ascending: true })
-      .returns<Event[]>(),
-  ]);
+  const [{ data: space, error: spaceError }, { data: tasks }, { data: events }] = await Promise.all(
+    [
+      supabase.from('Space').select('id,name,created_at,user_id').eq('id', id).single<Space>(),
+      supabase
+        .from('Task')
+        .select('id,name,status,priority,deadline,created_at')
+        .eq('space_id', id)
+        .order('created_at', { ascending: false })
+        .returns<Task[]>(),
+      supabase
+        .from('Event')
+        .select('id,Name,priority,date,created_at,overdue')
+        .eq('space_id', id)
+        .order('date', { ascending: true })
+        .returns<Event[]>(),
+    ],
+  );
 
   if (spaceError) return <main>Error loading space: {spaceError.message}</main>;
   if (!space) return <main>Space not found</main>;

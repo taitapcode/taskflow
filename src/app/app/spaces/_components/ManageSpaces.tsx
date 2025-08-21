@@ -86,11 +86,9 @@ export default function ManageSpaces({ initial }: { initial: Space[] }) {
                 <li key={s.id}>
                   <Link
                     href={`/app/spaces/${s.id}`}
-                    className='bg-content3/20 block rounded-md border border-neutral-800 p-3 transition-colors hover:bg-content3/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60'
+                    className='bg-content3/20 hover:bg-content3/40 focus-visible:ring-primary/60 block rounded-md border border-neutral-800 p-3 transition-colors focus:outline-none focus-visible:ring-2'
                   >
-                    <p className='font-medium underline-offset-2 group-hover:underline'>
-                      {s.name}
-                    </p>
+                    <p className='font-medium underline-offset-2 group-hover:underline'>{s.name}</p>
                     <p className='text-foreground-600 mt-1 text-xs'>
                       Created {formatDate(s.created_at)}
                     </p>

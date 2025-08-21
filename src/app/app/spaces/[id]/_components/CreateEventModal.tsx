@@ -62,7 +62,10 @@ export default function CreateEventModal({
     };
     if (priority) payload.priority = priority;
     if (description.trim()) payload.description = description.trim();
-    const { error: err } = await supabase.from('Event').insert(payload as any).single();
+    const { error: err } = await supabase
+      .from('Event')
+      .insert(payload as any)
+      .single();
     setSaving(false);
     if (err) {
       setError(err.message);
@@ -73,84 +76,91 @@ export default function CreateEventModal({
   }
 
   return (
-    <AnimatePresence>{open && (
-      <motion.div
-        key='overlay'
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black/60'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-      >
+    <AnimatePresence>
+      {open && (
         <motion.div
-          key='dialog'
-          role='dialog'
-          aria-modal='true'
-          className='bg-content2 w-full max-w-lg rounded-md border border-neutral-700 p-4 shadow-2xl'
-          initial={{ y: 24, scale: 0.98, opacity: 0 }}
-          animate={{ y: 0, scale: 1, opacity: 1 }}
-          exit={{ y: 16, scale: 0.98, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-          onClick={(e) => e.stopPropagation()}
+          key='overlay'
+          className='fixed inset-0 z-50 flex items-center justify-center bg-black/60'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
         >
-          <h3 className='text-lg font-medium'>Create Event</h3>
-          <form className='mt-3 grid gap-4' onSubmit={onSubmit}>
-            {error && (
-              <div className='text-danger border-danger/40 bg-danger/10 rounded-md border p-2 text-sm'>
-                {error}
+          <motion.div
+            key='dialog'
+            role='dialog'
+            aria-modal='true'
+            className='bg-content2 w-full max-w-lg rounded-md border border-neutral-700 p-4 shadow-2xl'
+            initial={{ y: 24, scale: 0.98, opacity: 0 }}
+            animate={{ y: 0, scale: 1, opacity: 1 }}
+            exit={{ y: 16, scale: 0.98, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className='text-lg font-medium'>Create Event</h3>
+            <form className='mt-3 grid gap-4' onSubmit={onSubmit}>
+              {error && (
+                <div className='text-danger border-danger/40 bg-danger/10 rounded-md border p-2 text-sm'>
+                  {error}
+                </div>
+              )}
+              <Input label='Name' value={name} onChange={(e) => setName(e.target.value)} required />
+
+              <div className='grid gap-4 sm:grid-cols-2'>
+                <DropdownSelect
+                  label='Priority'
+                  value={priority}
+                  onChange={(v) => {
+                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    setPriority(
+                      v === ''
+                        ? ''
+                        : (opts as readonly string[]).includes(v)
+                          ? (v as EventPriority)
+                          : '',
+                    );
+                  }}
+                  options={[
+                    { label: 'None', value: '' },
+                    { label: 'Low', value: 'low' },
+                    { label: 'Medium', value: 'medium' },
+                    { label: 'High', value: 'high' },
+                    { label: 'Imidiate', value: 'imidiate' },
+                  ]}
+                  variant='flat'
+                />
+
+                <Input
+                  label='Date'
+                  type='datetime-local'
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  required
+                />
               </div>
-            )}
-            <Input label='Name' value={name} onChange={(e) => setName(e.target.value)} required />
 
-            <div className='grid gap-4 sm:grid-cols-2'>
-              <DropdownSelect
-                label='Priority'
-                value={priority}
-                onChange={(v) => {
-                  const opts = ['low', 'medium', 'high', 'imidiate'] as const;
-                  setPriority(v === '' ? '' : (opts as readonly string[]).includes(v) ? (v as EventPriority) : '');
-                }}
-                options={[
-                  { label: 'None', value: '' },
-                  { label: 'Low', value: 'low' },
-                  { label: 'Medium', value: 'medium' },
-                  { label: 'High', value: 'high' },
-                  { label: 'Imidiate', value: 'imidiate' },
-                ]}
-                variant='flat'
-              />
+              <div>
+                <label className='text-foreground-600 text-xs'>Description</label>
+                <textarea
+                  className='focus:ring-primary/60 mt-1 min-h-24 w-full rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2'
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder='Describe the event'
+                />
+              </div>
 
-              <Input
-                label='Date'
-                type='datetime-local'
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className='text-foreground-600 text-xs'>Description</label>
-              <textarea
-                className='focus:ring-primary/60 mt-1 min-h-24 w-full rounded-md border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2'
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder='Describe the event'
-              />
-            </div>
-
-            <div className='mt-1 flex items-center justify-end gap-2'>
-              <Button variant='bordered' radius='full' onClick={onClose} type='button'>
-                Cancel
-              </Button>
-              <Button type='submit' radius='full' isDisabled={!canSave} isLoading={saving}>
-                Create Event
-              </Button>
-            </div>
-          </form>
+              <div className='mt-1 flex items-center justify-end gap-2'>
+                <Button variant='bordered' radius='full' onClick={onClose} type='button'>
+                  Cancel
+                </Button>
+                <Button type='submit' radius='full' isDisabled={!canSave} isLoading={saving}>
+                  Create Event
+                </Button>
+              </div>
+            </form>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}</AnimatePresence>
+      )}
+    </AnimatePresence>
   );
 }
-
