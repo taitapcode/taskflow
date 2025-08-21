@@ -18,9 +18,11 @@ export default function Layout({ children }: React.PropsWithChildren) {
   }, [updateUser]);
 
   return (
-    <div className='bg-content1 flex h-screen flex-1 flex-col overflow-hidden rounded-md border border-neutral-700 md:flex-row'>
+    <div className='bg-content1 flex h-screen min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-neutral-700 md:flex-row'>
       <Sidebar />
-      <main className='w-full p-4'>{children}</main>
+      <main className='min-h-0 w-full flex-1 overflow-hidden p-4 flex flex-col'>
+        {children}
+      </main>
     </div>
   );
 }

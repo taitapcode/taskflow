@@ -71,8 +71,8 @@ export default async function AppPage() {
     'there';
 
   return (
-    <main className='flex min-h-full flex-col gap-6'>
-      <header className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
+    <main className='flex h-full min-h-0 flex-1 flex-col overflow-hidden'>
+      <header className='flex shrink-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
         <div>
           <h1 className='text-2xl font-semibold'>Welcome back, {displayName}</h1>
           <p className='text-foreground-500 mt-1 text-sm'>Here’s a quick snapshot of your work.</p>
@@ -83,30 +83,33 @@ export default async function AppPage() {
           </Chip>
         </div>
       </header>
+      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+        <div className='flex flex-col gap-6'>
+          <SummaryCards tasks={tasks} events={events} />
 
-      <SummaryCards tasks={tasks} events={events} />
+          {/* Quick action: Create Space */}
+          <section className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
+            <Card shadow='sm' className='bg-content2 sm:col-span-1'>
+              <CardBody className='flex items-center justify-between gap-3'>
+                <div>
+                  <p className='font-medium'>Spaces</p>
+                  <p className='text-foreground-600 text-sm'>Organize tasks and events</p>
+                </div>
+                <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
+                  <FolderPlus size={18} /> Create
+                </Button>
+              </CardBody>
+            </Card>
+          </section>
 
-      {/* Quick action: Create Space */}
-      <section className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
-        <Card shadow='sm' className='bg-content2 sm:col-span-1'>
-          <CardBody className='flex items-center justify-between gap-3'>
-            <div>
-              <p className='font-medium'>Spaces</p>
-              <p className='text-foreground-600 text-sm'>Organize tasks and events</p>
+          <div className='grid gap-6 lg:grid-cols-3'>
+            <div className='lg:col-span-2'>
+              <RecentTasks tasks={tasks} viewAllHref='/app/tasks' />
             </div>
-            <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
-              <FolderPlus size={18} /> Create
-            </Button>
-          </CardBody>
-        </Card>
-      </section>
-
-      <div className='grid gap-6 lg:grid-cols-3'>
-        <div className='lg:col-span-2'>
-          <RecentTasks tasks={tasks} viewAllHref='/app/tasks' />
-        </div>
-        <div className='lg:col-span-1'>
-          <UpcomingEvents events={events} viewAllHref='/app/events' />
+            <div className='lg:col-span-1'>
+              <UpcomingEvents events={events} viewAllHref='/app/events' />
+            </div>
+          </div>
         </div>
       </div>
     </main>
