@@ -34,7 +34,7 @@ export default function SignUp() {
         data: {
           display_name: data.displayName,
           avatar_url:
-            'https://kvmosgysayrazohrupnz.supabase.co/storage/v1/object/public/avatar/default-avatar.jpg', // No avatar on signup
+            'https://kvmosgysayrazohrupnz.supabase.co/storage/v1/object/public/avatar/default-avatar.jpg',
         },
       },
     });
