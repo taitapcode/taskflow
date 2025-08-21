@@ -3,21 +3,7 @@ import { Button } from '@/app/_components/UI';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 
-type Props = {
-  id: number;
-  name: string;
-  spaceId: number | null;
-  spaceName: string | null;
-  deadline: string | null;
-};
-
-export default function TaskActions({
-  id: _id,
-  name: _name,
-  spaceId,
-  spaceName: _spaceName,
-  deadline: _deadline,
-}: Props) {
+export default function TaskActions() {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
 

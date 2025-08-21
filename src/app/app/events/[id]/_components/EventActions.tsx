@@ -3,22 +3,7 @@ import { Button } from '@/app/_components/UI';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 
-type Props = {
-  id: number;
-  name: string;
-  spaceId: number | null;
-  spaceName: string | null;
-  date: string;
-  description: string;
-};
-
-export default function EventActions({
-  id: _id,
-  name: _name,
-  spaceId,
-  date: _date,
-  description: _description,
-}: Props) {
+export default function EventActions() {
   const pathname = usePathname();
   const [copied, setCopied] = useState(false);
 

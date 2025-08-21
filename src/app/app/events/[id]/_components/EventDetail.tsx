@@ -156,14 +156,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
           >
             {editing ? 'Cancel' : 'Edit'}
           </Button>
-          <EventActions
-            id={event.id}
-            name={event.Name}
-            spaceId={event.Space?.id ?? null}
-            spaceName={event.Space?.name ?? null}
-            date={event.date}
-            description={event.description ?? ''}
-          />
+          <EventActions />
         </div>
       </header>
 

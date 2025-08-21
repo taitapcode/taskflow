@@ -166,13 +166,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
           >
             {editing ? 'Cancel' : 'Edit'}
           </Button>
-          <TaskActions
-            id={task.id}
-            name={task.name}
-            spaceId={task.Space?.id ?? null}
-            spaceName={task.Space?.name ?? null}
-            deadline={task.deadline}
-          />
+          <TaskActions />
         </div>
       </header>
 
