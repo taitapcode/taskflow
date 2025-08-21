@@ -7,7 +7,7 @@ export type AvatarProps = {
   src?: string | null;
   alt?: string;
   className?: string;
-  size?: number; // in pixels
+  size?: number;
   fallback?: React.ReactNode;
 };
 

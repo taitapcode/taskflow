@@ -113,7 +113,6 @@ export default function Button({
     className,
   );
 
-  // Use Motion for subtle hover/tap feedback
   const motionProps = prefersReducedMotion
     ? ({} as const)
     : ({

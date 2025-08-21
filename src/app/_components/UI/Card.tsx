@@ -17,12 +17,21 @@ export function Card({ className, shadow = 'sm', children }: CardProps) {
       : shadow === 'sm'
         ? 'shadow-sm shadow-black/20'
         : '';
-  const commonClass = cn('bg-content2 rounded-lg border border-neutral-700', shadowClass, className);
+  const commonClass = cn(
+    'bg-content2 rounded-lg border border-neutral-700',
+    shadowClass,
+    className,
+  );
   if (prefersReducedMotion) {
     return <div className={commonClass}>{children}</div>;
   }
   return (
-    <motion.div className={commonClass} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
+    <motion.div
+      className={commonClass}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+    >
       {children}
     </motion.div>
   );

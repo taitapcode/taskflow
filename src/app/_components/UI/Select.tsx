@@ -33,7 +33,6 @@ export default function Select({
     size === 'lg' ? 'h-12 text-base' : size === 'sm' ? 'h-9 text-sm' : 'h-10 text-sm';
   const leftPad = startContent ? 'pl-10' : 'pl-3';
   const rightPad = endContent ? 'pr-10' : 'pr-9';
-  // Use solid backgrounds to avoid UA white flash on focus/open
   const variantClasses =
     variant === 'flat'
       ? 'bg-content2 text-foreground hover:bg-content2/80 focus:bg-content2/90'

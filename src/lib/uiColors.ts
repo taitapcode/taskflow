@@ -27,7 +27,7 @@ export function taskPriorityColor(
       return 'primary';
     case 'high':
       return 'warning';
-    case 'imidiate':
+    case 'immediate':
       return 'danger';
     default:
       return 'default';
@@ -44,7 +44,7 @@ export function eventPriorityColor(
       return 'primary';
     case 'high':
       return 'warning';
-    case 'imidiate':
+    case 'immediate':
       return 'danger';
     default:
       return 'default';

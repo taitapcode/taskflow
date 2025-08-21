@@ -80,7 +80,6 @@ export default function EmptyState({
 }: Props) {
   return (
     <div className={cn('relative flex flex-col items-center gap-4 text-center', className)}>
-      {/* Animated gradient backdrop */}
       <div className='pointer-events-none absolute inset-0 -z-10 overflow-hidden'>
         <div className='empty-orb orb--primary animate-float-a' />
         <div className='empty-orb orb--accent animate-float-b' />
