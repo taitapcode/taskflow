@@ -160,7 +160,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      priority: "low" | "medium" | "high" | "imidiate"
+      priority: "low" | "medium" | "high" | "immediate"
       status: "done" | "in-progress" | "to-do" | "overdue"
       "tags color":
         | "#FF6B6B"
@@ -300,7 +300,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      priority: ["low", "medium", "high", "imidiate"],
+      priority: ["low", "medium", "high", "immediate"],
       status: ["done", "in-progress", "to-do", "overdue"],
       "tags color": [
         "#FF6B6B",
