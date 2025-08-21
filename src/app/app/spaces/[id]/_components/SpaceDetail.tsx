@@ -35,22 +35,6 @@ export default function SpaceDetail({
           </p>
         </div>
         <div className='flex flex-wrap items-center gap-2'>
-          <Button
-            variant='bordered'
-            size='sm'
-            radius='full'
-            onClick={() => setShowTask(true)}
-          >
-            New Task
-          </Button>
-          <Button
-            variant='bordered'
-            size='sm'
-            radius='full'
-            onClick={() => setShowEvent(true)}
-          >
-            New Event
-          </Button>
           <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
             Back to Spaces
           </Button>
@@ -63,9 +47,19 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Tasks</h2>
-              <Chip size='sm' variant='flat'>
-                {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
-              </Chip>
+              <div className='flex items-center gap-2'>
+                <Chip size='sm' variant='flat'>
+                  {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+                </Chip>
+                <Button
+                  variant='bordered'
+                  size='sm'
+                  radius='full'
+                  onClick={() => setShowTask(true)}
+                >
+                  New Task
+                </Button>
+              </div>
             </div>
             {tasks.length === 0 ? (
               <p className='text-foreground-500 text-sm'>No tasks in this space.</p>
@@ -111,9 +105,19 @@ export default function SpaceDetail({
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
               <h2 className='text-lg font-medium'>Events</h2>
-              <Chip size='sm' variant='flat'>
-                {events.length} {events.length === 1 ? 'event' : 'events'}
-              </Chip>
+              <div className='flex items-center gap-2'>
+                <Chip size='sm' variant='flat'>
+                  {events.length} {events.length === 1 ? 'event' : 'events'}
+                </Chip>
+                <Button
+                  variant='bordered'
+                  size='sm'
+                  radius='full'
+                  onClick={() => setShowEvent(true)}
+                >
+                  New Event
+                </Button>
+              </div>
             </div>
             {events.length === 0 ? (
               <p className='text-foreground-500 text-sm'>No events in this space.</p>
