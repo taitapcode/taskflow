@@ -167,10 +167,13 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
             <div className='grid gap-4 sm:grid-cols-2'>
               <div>
                 <p className='text-foreground-500 text-sm'>Date</p>
-                <p className='font-medium'>
-                  {formatDate(event.date)}
-                  <span className='text-foreground-500'> • {formatRelativeTime(event.date)}</span>
-                </p>
+                <div className='flex items-center gap-2 font-medium'>
+                  <span>{formatDate(event.date)}</span>
+                  <span className='text-foreground-500'>• {formatRelativeTime(event.date)}</span>
+                  {event.overdue && (
+                    <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                  )}
+                </div>
               </div>
               <div>
                 <p className='text-foreground-500 text-sm'>Priority</p>

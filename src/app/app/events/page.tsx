@@ -28,7 +28,7 @@ export default async function EventsPage() {
     await updateOverdueEventsForSpaces(supabase, spaceIds);
     const { data: eventsData, error: eventsError } = await supabase
       .from('Event')
-      .select('id,Name,date,description,priority,space_id,created_at,Space(id,name)')
+      .select('id,Name,date,description,priority,overdue,space_id,created_at,Space(id,name)')
       .in('space_id', spaceIds)
       .order('date', { ascending: true });
     if (eventsError) return <main>Error loading events: {eventsError.message}</main>;

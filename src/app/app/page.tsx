@@ -55,7 +55,7 @@ export default async function AppPage() {
         .limit(20),
       supabase
         .from('Event')
-        .select('id,Name,date,description,priority,space_id,created_at,Space(id,name)')
+        .select('id,Name,date,description,priority,overdue,space_id,created_at,Space(id,name)')
         .in('space_id', spaceIds)
         .order('date', { ascending: true })
         .limit(10),

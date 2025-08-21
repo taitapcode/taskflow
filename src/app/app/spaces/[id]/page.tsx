@@ -5,7 +5,7 @@ import { updateOverdueTasksForSpaces, updateOverdueEventsForSpaces } from '@/lib
 
 type Space = Tables<'Space'>;
 type Task = Pick<Tables<'Task'>, 'id' | 'name' | 'status' | 'priority' | 'deadline' | 'created_at'>;
-type Event = Pick<Tables<'Event'>, 'id' | 'Name' | 'priority' | 'date' | 'created_at'>;
+type Event = Pick<Tables<'Event'>, 'id' | 'Name' | 'priority' | 'date' | 'created_at' | 'overdue'>;
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -36,7 +36,7 @@ export default async function SpacePage({ params }: Props) {
       .returns<Task[]>(),
     supabase
       .from('Event')
-      .select('id,Name,priority,date,created_at')
+      .select('id,Name,priority,date,created_at,overdue')
       .eq('space_id', id)
       .order('date', { ascending: true })
       .returns<Event[]>(),

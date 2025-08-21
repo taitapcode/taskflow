@@ -12,7 +12,7 @@ import CreateEventModal from './CreateEventModal';
 
 type Space = Tables<'Space'>;
 type Task = Pick<Tables<'Task'>, 'id' | 'name' | 'status' | 'priority' | 'deadline' | 'created_at'>;
-type Event = Pick<Tables<'Event'>, 'id' | 'Name' | 'priority' | 'date' | 'created_at'>;
+type Event = Pick<Tables<'Event'>, 'id' | 'Name' | 'priority' | 'date' | 'created_at' | 'overdue'>;
 
 export default function SpaceDetail({
   space,
@@ -260,6 +260,9 @@ export default function SpaceDetail({
                           <Chip size='sm' variant='flat' color={eventPriorityColor(e.priority)} className='capitalize'>
                             {e.priority ?? 'none'}
                           </Chip>
+                          {e.overdue && (
+                            <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                          )}
                         </div>
                         <p className='text-foreground-600 mt-1 text-xs'>
                           Scheduled {formatDate(e.date)}

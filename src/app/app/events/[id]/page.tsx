@@ -20,7 +20,7 @@ export default async function EventDetailPage({ params }: Props) {
   await updateOverdueEventById(supabase, id);
   const { data, error } = await supabase
     .from('Event')
-    .select('id,Name,description,date,priority,created_at,space_id,Space(id,name)')
+    .select('id,Name,description,date,priority,overdue,created_at,space_id,Space(id,name)')
     .eq('id', id)
     .single<EventWithSpace>();
 

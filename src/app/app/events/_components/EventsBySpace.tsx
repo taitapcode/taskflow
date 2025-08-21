@@ -184,8 +184,15 @@ export default function EventsBySpace({ spaces, events }: Props) {
           {
             key: 'date',
             header: 'Date',
-            className: 'w-[18%] min-w-[140px]',
-            cell: (e) => formatDate(e.date),
+            className: 'w-[18%] min-w-[180px]',
+            cell: (e) => (
+              <div className='flex items-center gap-2'>
+                <span>{formatDate(e.date)}</span>
+                {e.overdue && (
+                  <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                )}
+              </div>
+            ),
           },
           {
             key: 'priority',
@@ -247,9 +254,10 @@ export default function EventsBySpace({ spaces, events }: Props) {
                       </Chip>
                     </div>
                     <div className='mt-2 flex flex-wrap items-center gap-2 text-xs'>
-                      <span className='text-foreground-500'>
-                        {formatDate(e.date)}
-                      </span>
+                      <span className='text-foreground-500'>{formatDate(e.date)}</span>
+                      {e.overdue && (
+                        <Chip size='sm' variant='solid' color='danger'>Overdue</Chip>
+                      )}
                     </div>
                   </li>
                 ))}
