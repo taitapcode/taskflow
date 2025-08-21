@@ -5,7 +5,8 @@ import { formatRelativeTime } from '@/lib/relative-time';
 import { formatDate } from '@/lib/date';
 import { eventPriorityColor, taskPriorityColor, taskStatusColor } from '@/lib/uiColors';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CreateTaskModal from './CreateTaskModal';
 import CreateEventModal from './CreateEventModal';
 
@@ -24,6 +25,11 @@ export default function SpaceDetail({
 }) {
   const [showTask, setShowTask] = useState(false);
   const [showEvent, setShowEvent] = useState(false);
+  const router = useRouter();
+  const goBack = useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.length > 1) router.back();
+    else router.push('/app/spaces');
+  }, [router]);
   return (
     <>
       <header className='flex items-start justify-between gap-4'>
@@ -35,7 +41,7 @@ export default function SpaceDetail({
           </p>
         </div>
         <div className='flex flex-wrap items-center gap-2'>
-          <Button href='/app/spaces' variant='bordered' size='sm' radius='full'>
+          <Button onClick={goBack} variant='bordered' size='sm' radius='full'>
             Back to Spaces
           </Button>
         </div>
