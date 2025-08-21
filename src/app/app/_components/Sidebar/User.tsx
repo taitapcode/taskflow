@@ -22,7 +22,11 @@ export default function User() {
         <Avatar src={user?.avatarUrl ?? undefined} size={36} />
       </div>
       <motion.span
-        animate={prefersReducedMotion ? undefined : { opacity: open ? 1 : 0, x: open ? (isHovered ? 10 : 0) : 20 }}
+        animate={
+          prefersReducedMotion
+            ? undefined
+            : { opacity: open ? 1 : 0, x: open ? (isHovered ? 10 : 0) : 20 }
+        }
         className='w-60 overflow-hidden text-lg whitespace-nowrap'
       >
         {user?.displayName ?? 'Account'}

@@ -16,7 +16,6 @@ export default async function SpacePage({ params }: Props) {
 
   const supabase = await createClient();
 
-  // First, mark overdue tasks and events for this space
   await Promise.all([
     updateOverdueTasksForSpaces(supabase, [id]),
     updateOverdueEventsForSpaces(supabase, [id]),

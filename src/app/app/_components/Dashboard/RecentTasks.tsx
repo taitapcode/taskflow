@@ -50,7 +50,12 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
       header: 'Priority',
       className: 'w-[14%] min-w-[120px]',
       cell: (t) => (
-        <Chip size='sm' variant='solid' color={taskPriorityColor(t.priority)} className='capitalize'>
+        <Chip
+          size='sm'
+          variant='solid'
+          color={taskPriorityColor(t.priority)}
+          className='capitalize'
+        >
           {t.priority ?? 'none'}
         </Chip>
       ),
@@ -74,7 +79,7 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
             </a>
           )}
         </div>
-        {/* Mobile – stacked list */}
+
         <ul className='flex flex-col gap-2 md:hidden'>
           {tasks.slice(0, 10).length === 0 && (
             <li className='text-foreground-500 text-sm'>No tasks found</li>
@@ -134,7 +139,6 @@ export default function RecentTasks({ tasks, viewAllHref }: Props & { viewAllHre
           ))}
         </ul>
 
-        {/* Desktop – table */}
         <div className='hidden md:block'>
           <DataTable
             ariaLabel='Recent tasks table'

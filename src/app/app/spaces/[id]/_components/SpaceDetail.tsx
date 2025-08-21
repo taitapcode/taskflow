@@ -33,10 +33,8 @@ export default function SpaceDetail({
     else router.push('/app/spaces');
   }, [router]);
 
-  // Edit Space (name/description)
   const [spaceView, setSpaceView] = useState(space);
   const [showEdit, setShowEdit] = useState(false);
-  // Optimistic save from modal
   async function handleEditSubmit(values: { name: string; description: string }) {
     const prev = spaceView;
     const optimistic = { ...prev, name: values.name, description: values.description || null };
@@ -48,15 +46,12 @@ export default function SpaceDetail({
       patch.description = values.description || null;
     const { error } = await supabase.from('Space').update(patch).eq('id', prev.id);
     if (error) {
-      // rollback
       setSpaceView(prev);
       throw new Error(error.message);
     }
-    // keep optimistic state and refresh in background
     router.refresh();
   }
 
-  // Tasks are always sorted by status (primary), with a secondary sort chosen by user
   const taskSortOptions = [
     'created_desc',
     'created_asc',
@@ -90,12 +85,12 @@ export default function SpaceDetail({
       'to-do': 2,
       done: 3,
     };
-    const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
+    const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, immediate: 3 };
     const arr = [...tasks];
     return arr.sort((a, b) => {
       const sa = statusRank[a.status] ?? 99;
       const sb = statusRank[b.status] ?? 99;
-      if (sa !== sb) return sa - sb; // Always group by status first
+      if (sa !== sb) return sa - sb;
 
       switch (taskSortBy) {
         case 'created_asc':
@@ -125,7 +120,7 @@ export default function SpaceDetail({
   }, [tasks, taskSortBy]);
 
   const eventsSorted = useMemo(() => {
-    const rank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
+    const rank: Record<string, number> = { low: 0, medium: 1, high: 2, immediate: 3 };
     const arr = [...events];
     return arr.sort((a, b) => {
       switch (eventSortBy) {
@@ -145,12 +140,14 @@ export default function SpaceDetail({
     });
   }, [events, eventSortBy]);
 
-  // Progressive rendering for large lists
   const DEFAULT_VISIBLE = 50;
   const [tasksVisible, setTasksVisible] = useState(DEFAULT_VISIBLE);
   const [eventsVisible, setEventsVisible] = useState(DEFAULT_VISIBLE);
   const tasksSlice = useMemo(() => tasksSorted.slice(0, tasksVisible), [tasksSorted, tasksVisible]);
-  const eventsSlice = useMemo(() => eventsSorted.slice(0, eventsVisible), [eventsSorted, eventsVisible]);
+  const eventsSlice = useMemo(
+    () => eventsSorted.slice(0, eventsVisible),
+    [eventsSorted, eventsVisible],
+  );
   return (
     <>
       <header className='flex items-start justify-between gap-4'>
@@ -158,10 +155,13 @@ export default function SpaceDetail({
           <h1 className='text-2xl font-semibold'>{spaceView.name}</h1>
           <p className='text-foreground-500 mt-1 text-sm'>
             Created {formatDate(spaceView.created_at)}
-            <span className='text-foreground-500'> • {formatRelativeTime(spaceView.created_at)}</span>
+            <span className='text-foreground-500'>
+              {' '}
+              • {formatRelativeTime(spaceView.created_at)}
+            </span>
           </p>
           {spaceView.description && (
-            <p className='text-foreground-500 mt-2 max-w-prose whitespace-pre-wrap text-sm'>
+            <p className='text-foreground-500 mt-2 max-w-prose text-sm whitespace-pre-wrap'>
               {spaceView.description}
             </p>
           )}
@@ -177,7 +177,6 @@ export default function SpaceDetail({
       </header>
 
       <div className='grid gap-6 lg:grid-cols-2'>
-        {/* Tasks */}
         <Card shadow='sm' className='bg-content2 border border-neutral-700'>
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
@@ -276,7 +275,6 @@ export default function SpaceDetail({
           </CardBody>
         </Card>
 
-        {/* Events */}
         <Card shadow='sm' className='bg-content2 border border-neutral-700'>
           <CardBody className='p-4'>
             <div className='mb-3 flex items-center justify-between'>
@@ -364,7 +362,6 @@ export default function SpaceDetail({
         </Card>
       </div>
 
-      {/* Modals */}
       <CreateTaskModal open={showTask} spaceId={space.id} onClose={() => setShowTask(false)} />
       <CreateEventModal open={showEvent} spaceId={space.id} onClose={() => setShowEvent(false)} />
       <EditSpaceModal

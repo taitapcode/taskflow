@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import type { Tables } from '@/lib/supabase/database.types';
 import { Card, CardBody, Chip, Input, DropdownSelect, EmptyState } from '@/app/_components/UI';
 import DataTable, { type Column } from '../../_components/DataTable';
@@ -15,17 +15,14 @@ type Props = {
   events: EventWithSpace[];
 };
 
-// Centralized event priority color helper for consistency
-
 export default function EventsBySpace({ spaces, events }: Props) {
   const router = useRouter();
 
-  // Local filters (no URL sync)
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
   type EventPriority = NonNullable<Tables<'Event'>['priority']>;
-  const eventPriorities = ['low', 'medium', 'high', 'imidiate'] as const;
+  const eventPriorities = ['low', 'medium', 'high', 'immediate'] as const;
   const isEventPriority = (v: string): v is EventPriority =>
     (eventPriorities as readonly string[]).includes(v);
   const [priorityFilter, setPriorityFilter] = useState<EventPriority | 'all'>('all');
@@ -35,9 +32,6 @@ export default function EventsBySpace({ spaces, events }: Props) {
   const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
   const [sortBy, setSortBy] = useState<SortBy>('date_asc');
 
-  // Removed loading spinner; keep instant filter updates.
-
-  // Derived filtered + sorted events
   const filtered = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase();
     let rows = events.filter((e) => {
@@ -65,7 +59,6 @@ export default function EventsBySpace({ spaces, events }: Props) {
     return rows;
   }, [events, deferredQuery, spaceFilter, priorityFilter, hidePast, sortBy]);
 
-  // Group by space after filtering
   const eventsBySpace = useMemo(() => {
     const map = new Map<number, EventWithSpace[]>();
     for (const s of spaces) map.set(s.id, []);
@@ -78,15 +71,19 @@ export default function EventsBySpace({ spaces, events }: Props) {
 
   const nonEmptySpaces = spaces.filter((s) => (eventsBySpace.get(s.id)?.length ?? 0) > 0);
 
-  // Simple client-side pagination per space to reduce DOM load
   const DEFAULT_VISIBLE = 50;
   const [visibleBySpace, setVisibleBySpace] = useState<Record<number, number>>({});
-  const getVisible = useCallback((spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE, [visibleBySpace]);
+  const getVisible = useCallback(
+    (spaceId: number) => visibleBySpace[spaceId] ?? DEFAULT_VISIBLE,
+    [visibleBySpace],
+  );
   const showMore = useCallback((spaceId: number) => {
-    setVisibleBySpace((prev) => ({ ...prev, [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE }));
+    setVisibleBySpace((prev) => ({
+      ...prev,
+      [spaceId]: (prev[spaceId] ?? DEFAULT_VISIBLE) + DEFAULT_VISIBLE,
+    }));
   }, []);
 
-  // Stable column definitions
   const columns: Column<EventWithSpace>[] = useMemo(
     () => [
       {
@@ -115,7 +112,12 @@ export default function EventsBySpace({ spaces, events }: Props) {
         header: 'Priority',
         className: 'w-[12%] min-w-[120px]',
         cell: (e) => (
-          <Chip size='sm' variant='solid' color={eventPriorityColor(e.priority)} className='capitalize'>
+          <Chip
+            size='sm'
+            variant='solid'
+            color={eventPriorityColor(e.priority)}
+            className='capitalize'
+          >
             {e.priority ?? 'none'}
           </Chip>
         ),
@@ -147,7 +149,6 @@ export default function EventsBySpace({ spaces, events }: Props) {
 
   return (
     <div className='flex flex-col gap-6'>
-      {/* Filters toolbar */}
       <Card shadow='sm' className='bg-content2 sticky top-0 z-20 border border-neutral-700'>
         <CardBody className='p-4'>
           <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
@@ -178,7 +179,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
                   { label: 'Low', value: 'low' },
                   { label: 'Medium', value: 'medium' },
                   { label: 'High', value: 'high' },
-                  { label: 'Imidiate', value: 'imidiate' },
+                  { label: 'Immediate', value: 'immediate' },
                 ]}
                 variant='flat'
                 size='sm'
@@ -224,7 +225,7 @@ export default function EventsBySpace({ spaces, events }: Props) {
               <div className='mb-3 flex items-center justify-between'>
                 <h2 className='text-lg font-medium'>{space.name}</h2>
               </div>
-              {/* Mobile – stacked list */}
+
               <ul className='flex flex-col gap-2 md:hidden'>
                 {rowsSlice.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No events in this space</li>
@@ -266,7 +267,6 @@ export default function EventsBySpace({ spaces, events }: Props) {
                 ))}
               </ul>
 
-              {/* Desktop – table */}
               <div className='hidden md:block'>
                 <DataTable
                   ariaLabel={`Events in ${space.name}`}

@@ -108,7 +108,7 @@ export default function CreateEventModal({
                   label='Priority'
                   value={priority}
                   onChange={(v) => {
-                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const opts = ['low', 'medium', 'high', 'immediate'] as const;
                     setPriority(
                       v === ''
                         ? ''
@@ -122,7 +122,7 @@ export default function CreateEventModal({
                     { label: 'Low', value: 'low' },
                     { label: 'Medium', value: 'medium' },
                     { label: 'High', value: 'high' },
-                    { label: 'Imidiate', value: 'imidiate' },
+                    { label: 'Immediate', value: 'immediate' },
                   ]}
                   variant='flat'
                 />

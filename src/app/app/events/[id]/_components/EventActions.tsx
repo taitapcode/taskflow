@@ -34,7 +34,6 @@ export default function EventActions() {
       <Button onClick={copyLink} variant='bordered' size='sm' radius='full'>
         {copied ? 'Copied!' : 'Copy Link'}
       </Button>
-      {/* ICS and Google Calendar actions removed as requested */}
     </div>
   );
 }

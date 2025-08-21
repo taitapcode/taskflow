@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React from 'react';
 import cn from '@/lib/cn';
 
@@ -98,7 +98,6 @@ function DataTableInner<T>({
   );
 }
 
-// Memoize to avoid re-renders when parent props are referentially stable
 const DataTable = React.memo(DataTableInner) as <T>(props: Props<T>) => JSX.Element;
 
 export default DataTable;

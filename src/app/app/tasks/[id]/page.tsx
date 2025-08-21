@@ -13,7 +13,6 @@ export default async function TaskDetailPage({ params }: Props) {
   if (Number.isNaN(id)) return <main>Invalid task id</main>;
 
   const supabase = await createClient();
-  // Auto-mark as overdue if needed before fetching
   await updateOverdueTaskById(supabase, id);
   const { data, error } = await supabase
     .from('Task')

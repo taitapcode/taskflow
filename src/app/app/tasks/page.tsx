@@ -25,7 +25,6 @@ export default async function TasksPage() {
 
   let tasks: TaskWithSpace[] = [];
   if (spaceIds.length > 0) {
-    // Auto-mark overdue tasks before fetching
     await updateOverdueTasksForSpaces(supabase, spaceIds);
     const { data: tasksData, error: tasksError } = await supabase
       .from('Task')
@@ -47,7 +46,7 @@ export default async function TasksPage() {
       <div className='shrink-0'>
         <CreateTaskAction spaces={spaces ?? []} />
       </div>
-      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+      <div className='scrollbar-hide min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0'>
         <TasksBySpace spaces={spaces ?? []} tasks={tasks} />
       </div>
     </main>

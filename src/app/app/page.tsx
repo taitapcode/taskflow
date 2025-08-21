@@ -19,7 +19,6 @@ export default async function AppPage() {
     return <main>Error: {userError.message}</main>;
   }
 
-  // Get spaces for the current user
   const { data: spaces, error: spacesError } = await supabase
     .from('Space')
     .select('id')
@@ -31,14 +30,12 @@ export default async function AppPage() {
 
   const spaceIds = (spaces ?? []).map((s) => s.id);
 
-  // Fetch tasks and events scoped to user's spaces
   type TaskWithSpace = Tables<'Task'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
   let tasks: TaskWithSpace[] = [];
   type EventWithSpace = Tables<'Event'> & { Space?: Pick<Tables<'Space'>, 'id' | 'name'> | null };
   let events: EventWithSpace[] = [];
 
   if (spaceIds.length > 0) {
-    // Auto-mark overdue tasks and events before fetching
     await Promise.all([
       updateOverdueTasksForSpaces(supabase, spaceIds),
       updateOverdueEventsForSpaces(supabase, spaceIds),
@@ -83,11 +80,10 @@ export default async function AppPage() {
           </Chip>
         </div>
       </header>
-      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+      <div className='scrollbar-hide min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0'>
         <div className='flex flex-col gap-6'>
           <SummaryCards tasks={tasks} events={events} />
 
-          {/* Quick action: Create Space */}
           <section className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
             <Card shadow='sm' className='bg-content2 sm:col-span-1'>
               <CardBody className='flex items-center justify-between gap-3'>

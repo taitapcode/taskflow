@@ -15,7 +15,6 @@ export default async function EventDetailPage({ params }: Props) {
   if (Number.isNaN(id)) return <main>Invalid event id</main>;
 
   const supabase = await createClient();
-  // Auto-mark as overdue if needed before fetching
   await updateOverdueEventById(supabase, id);
   const { data, error } = await supabase
     .from('Event')

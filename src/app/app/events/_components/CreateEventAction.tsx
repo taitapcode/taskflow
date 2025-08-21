@@ -12,7 +12,7 @@ export default function CreateEventAction({ spaces }: { spaces: Space[] }) {
   return (
     <>
       <Card shadow='sm' className='bg-content2 border border-neutral-700'>
-        <CardBody className='p-4 flex items-center justify-between'>
+        <CardBody className='flex items-center justify-between p-4'>
           <div>
             <p className='font-medium'>Create a new event</p>
             <p className='text-foreground-600 text-sm'>Schedule events within your spaces</p>

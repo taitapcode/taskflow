@@ -62,7 +62,6 @@ export default function AvatarUploader({ onUploaded }: Props) {
       if (oldPath && oldPath !== path) {
         const { error: removeErr } = await supabase.storage.from('avatar').remove([oldPath]);
         if (removeErr) {
-          // Non-fatal cleanup failure
           console.error('Failed to remove old avatar:', removeErr.message);
         }
       }
@@ -71,7 +70,6 @@ export default function AvatarUploader({ onUploaded }: Props) {
       setError(message);
     } finally {
       setUploading(false);
-      // Clear the input so the same file can be re-selected if needed
       e.target.value = '';
     }
   }

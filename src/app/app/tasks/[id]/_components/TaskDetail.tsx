@@ -32,7 +32,6 @@ function toLocalInputFromDate(d: Date) {
 }
 
 function nextWeekday(base: Date, weekday: number) {
-  // weekday: 1=Mon ... 5=Fri etc. JS getDay(): 0=Sun..6=Sat
   const d = new Date(base);
   const day = d.getDay();
   const diff = (weekday + 7 - day) % 7 || 7;
@@ -114,12 +113,10 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     router.refresh();
   }
 
-  // Focus first input when entering edit mode
   useEffect(() => {
     if (editing) nameRef.current?.focus();
   }, [editing]);
 
-  // Warn before closing tab if editing with unsaved changes
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (editing && isDirty) {
@@ -130,7 +127,6 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
     return () => window.removeEventListener('beforeunload', handler);
   }, [editing, isDirty]);
 
-  // Keyboard shortcuts: Ctrl/Cmd+S to save, Esc to cancel
   useEffect(() => {
     if (!editing) return;
     const keyHandler = (e: KeyboardEvent) => {
@@ -279,7 +275,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                   label='Priority'
                   value={priority ?? ''}
                   onChange={(v) => {
-                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const opts = ['low', 'medium', 'high', 'immediate'] as const;
                     const isPriority = (x: string): x is NonNullable<Tables<'Task'>['priority']> =>
                       (opts as readonly string[]).includes(x);
                     setPriority(v === '' ? null : isPriority(v) ? v : null);
@@ -289,7 +285,7 @@ export default function TaskDetail({ task }: { task: TaskWithSpace }) {
                     { label: 'Low', value: 'low' },
                     { label: 'Medium', value: 'medium' },
                     { label: 'High', value: 'high' },
-                    { label: 'Imidiate', value: 'imidiate' },
+                    { label: 'Immediate', value: 'immediate' },
                   ]}
                   variant='flat'
                   isDisabled={saving}

@@ -126,7 +126,7 @@ export default function CreateEventGlobalModal({
                   label='Priority'
                   value={priority}
                   onChange={(v) => {
-                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const opts = ['low', 'medium', 'high', 'immediate'] as const;
                     setPriority(
                       v === ''
                         ? ''
@@ -140,7 +140,7 @@ export default function CreateEventGlobalModal({
                     { label: 'Low', value: 'low' },
                     { label: 'Medium', value: 'medium' },
                     { label: 'High', value: 'high' },
-                    { label: 'Imidiate', value: 'imidiate' },
+                    { label: 'Immediate', value: 'immediate' },
                   ]}
                   variant='flat'
                 />
@@ -179,4 +179,3 @@ export default function CreateEventGlobalModal({
     </AnimatePresence>
   );
 }
-

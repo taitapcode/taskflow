@@ -42,7 +42,10 @@ export default function DesktopSidebar() {
       <div className='flex flex-col'>
         <div className='mb-6 flex items-center gap-3 pb-4'>
           <Image src={logoImage} alt='logo' width={45} height={45} />
-          <motion.span animate={prefersReducedMotion ? undefined : { opacity: open ? 1 : 0 }} className='w-60 text-lg font-bold opacity-0'>
+          <motion.span
+            animate={prefersReducedMotion ? undefined : { opacity: open ? 1 : 0 }}
+            className='w-60 text-lg font-bold opacity-0'
+          >
             TaskFlow
           </motion.span>
         </div>

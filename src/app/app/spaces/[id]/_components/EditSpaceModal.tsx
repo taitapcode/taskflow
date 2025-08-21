@@ -70,7 +70,7 @@ export default function EditSpaceModal({
           <motion.div
             role='dialog'
             aria-modal='true'
-            className='relative z-10 w-[95vw] max-w-xl rounded-lg border border-neutral-700 bg-content1 p-4 shadow-xl'
+            className='bg-content1 relative z-10 w-[95vw] max-w-xl rounded-lg border border-neutral-700 p-4 shadow-xl'
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -101,10 +101,21 @@ export default function EditSpaceModal({
                 />
               </div>
               <div className='flex items-center gap-2'>
-                <Button type='submit' isDisabled={saving || !name.trim()} isLoading={saving} radius='full'>
+                <Button
+                  type='submit'
+                  isDisabled={saving || !name.trim()}
+                  isLoading={saving}
+                  radius='full'
+                >
                   Save
                 </Button>
-                <Button type='button' variant='bordered' radius='full' onClick={onClose} isDisabled={saving}>
+                <Button
+                  type='button'
+                  variant='bordered'
+                  radius='full'
+                  onClick={onClose}
+                  isDisabled={saving}
+                >
                   Cancel
                 </Button>
               </div>

@@ -15,12 +15,9 @@ type Props = {
   tasks: TaskWithSpace[];
 };
 
-// Use centralized color helpers to avoid duplication and keep consistency
-
 export default function TasksBySpace({ spaces, tasks }: Props) {
   const router = useRouter();
 
-  // Local filters & sorting (no URL sync)
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [spaceFilter, setSpaceFilter] = useState<number | 'all'>('all');
@@ -31,7 +28,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all');
 
   type TaskPriority = NonNullable<Tables<'Task'>['priority']>;
-  const priorityOptions = ['low', 'medium', 'high', 'imidiate'] as const;
+  const priorityOptions = ['low', 'medium', 'high', 'immediate'] as const;
   const isTaskPriority = (v: string): v is TaskPriority =>
     (priorityOptions as readonly string[]).includes(v);
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | 'all'>('all');
@@ -48,10 +45,9 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
   const isSortBy = (v: string): v is SortBy => (sortOptions as readonly string[]).includes(v);
   const [sortBy, setSortBy] = useState<SortBy>('created_desc');
 
-  // Derived filtered + sorted tasks
   const filtered = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase();
-    const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, imidiate: 3 };
+    const priorityRank: Record<string, number> = { low: 0, medium: 1, high: 2, immediate: 3 };
     let rows = tasks.filter((t) => {
       if (spaceFilter !== 'all' && t.space_id !== spaceFilter) return false;
       if (statusFilter !== 'all' && t.status !== statusFilter) return false;
@@ -91,7 +87,6 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
     return rows;
   }, [tasks, deferredQuery, spaceFilter, statusFilter, priorityFilter, sortBy]);
 
-  // Group by space after filtering
   const tasksBySpace = useMemo(() => {
     const map = new Map<number, TaskWithSpace[]>();
     for (const s of spaces) map.set(s.id, []);
@@ -104,7 +99,6 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
 
   const nonEmptySpaces = spaces.filter((s) => (tasksBySpace.get(s.id)?.length ?? 0) > 0);
 
-  // Simple client-side pagination per space to cap DOM size
   const DEFAULT_VISIBLE = 50;
   const [visibleBySpace, setVisibleBySpace] = useState<Record<number, number>>({});
   const getVisible = useCallback(
@@ -118,7 +112,6 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
     }));
   }, []);
 
-  // Stable column definitions
   const columns: Column<TaskWithSpace>[] = useMemo(
     () => [
       {
@@ -185,7 +178,6 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
 
   return (
     <div className='flex flex-col gap-6'>
-      {/* Filters toolbar */}
       <Card shadow='sm' className='bg-content2 sticky top-0 z-20 border border-neutral-700'>
         <CardBody className='p-4'>
           <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
@@ -230,7 +222,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                   { label: 'Low', value: 'low' },
                   { label: 'Medium', value: 'medium' },
                   { label: 'High', value: 'high' },
-                  { label: 'Imidiate', value: 'imidiate' },
+                  { label: 'Immediate', value: 'immediate' },
                 ]}
                 variant='flat'
                 size='sm'
@@ -270,7 +262,7 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
               <div className='mb-3 flex items-center justify-between'>
                 <h2 className='text-lg font-medium'>{space.name}</h2>
               </div>
-              {/* Mobile – stacked list */}
+
               <ul className='flex flex-col gap-2 md:hidden'>
                 {rowsSlice.length === 0 && (
                   <li className='text-foreground-500 text-sm'>No tasks in this space</li>
@@ -317,7 +309,6 @@ export default function TasksBySpace({ spaces, tasks }: Props) {
                 ))}
               </ul>
 
-              {/* Desktop – table */}
               <div className='hidden md:block'>
                 <DataTable
                   ariaLabel={`Tasks in ${space.name}`}

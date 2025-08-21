@@ -25,7 +25,6 @@ export default async function EventsPage() {
 
   let events: EventWithSpace[] = [];
   if (spaceIds.length > 0) {
-    // Auto-mark overdue events before fetching
     await updateOverdueEventsForSpaces(supabase, spaceIds);
     const { data: eventsData, error: eventsError } = await supabase
       .from('Event')
@@ -47,7 +46,7 @@ export default async function EventsPage() {
       <div className='shrink-0'>
         <CreateEventAction spaces={spaces ?? []} />
       </div>
-      <div className='min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0 scrollbar-hide'>
+      <div className='scrollbar-hide min-h-0 flex-1 overflow-y-auto pb-20 md:pb-0'>
         <EventsBySpace spaces={spaces ?? []} events={events} />
       </div>
     </main>

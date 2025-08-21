@@ -280,7 +280,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                   label='Priority'
                   value={priority ?? ''}
                   onChange={(v) => {
-                    const opts = ['low', 'medium', 'high', 'imidiate'] as const;
+                    const opts = ['low', 'medium', 'high', 'immediate'] as const;
                     const isPriority = (x: string): x is NonNullable<Tables<'Event'>['priority']> =>
                       (opts as readonly string[]).includes(x);
                     setPriority(v === '' ? null : isPriority(v) ? v : null);
@@ -290,7 +290,7 @@ export default function EventDetail({ event }: { event: EventWithSpace }) {
                     { label: 'Low', value: 'low' },
                     { label: 'Medium', value: 'medium' },
                     { label: 'High', value: 'high' },
-                    { label: 'Imidiate', value: 'imidiate' },
+                    { label: 'Immediate', value: 'immediate' },
                   ]}
                   variant='flat'
                   isDisabled={saving}

@@ -5,7 +5,6 @@ export default function Loading() {
         <div className='bg-content3 h-7 w-40 animate-pulse rounded-md' />
       </header>
 
-      {/* Summary cards skeleton */}
       <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6'>
         {Array.from({ length: 6 }).map((_, i) => (
           <div
@@ -24,7 +23,6 @@ export default function Loading() {
       </div>
 
       <div className='grid gap-6 lg:grid-cols-3'>
-        {/* Recent tasks skeleton */}
         <div className='lg:col-span-2'>
           <div className='bg-content2 animate-pulse rounded-md border border-neutral-700 p-4'>
             <div className='bg-content3 mb-3 h-5 w-32 rounded' />
@@ -41,7 +39,7 @@ export default function Loading() {
             </div>
           </div>
         </div>
-        {/* Upcoming events skeleton */}
+
         <div className='lg:col-span-1'>
           <div className='bg-content2 animate-pulse rounded-md border border-neutral-700 p-4'>
             <div className='bg-content3 mb-3 h-5 w-40 rounded' />
