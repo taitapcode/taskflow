@@ -3,7 +3,9 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export default async function createClient() {
-  const cookieStore = cookies();
+  // In Next.js (14.2+), dynamic APIs like `cookies()` are async
+  // and must be awaited before accessing methods like `getAll`/`set`.
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
